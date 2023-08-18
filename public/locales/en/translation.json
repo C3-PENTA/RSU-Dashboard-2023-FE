@@ -1,0 +1,26 @@
+{
+  "LANGUAGE": {
+    "EN": "English",
+    "KO": "한국어"
+  },
+  "DASHBOARD": {
+    "TITLE": "Dashboard"
+  },
+  "TLS_COMMUNICATIONS": {
+    "TITLE": "TLS Communications",
+    "STATUS": {
+      "NONE": "No communication",
+      "TLS": "TLS communication",
+      "IMPOSSIBLE": "Communication impossible​"
+    }
+  },
+  "CERTIFICATES": {
+    "TITLE": "Certificates"
+  },
+  "SETTINGS": {
+    "TITLE": "Settings"
+  },
+  "MONITOR": {
+    "TITLE": "Monitor"
+  }
+}

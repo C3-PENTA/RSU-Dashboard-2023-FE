@@ -1,0 +1,42 @@
+.input-username-login input {
+  color: white;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.4);
+  border: 0;
+
+  ::placeholder {
+    font-size: 30px;
+  }
+}
+
+.input-username-login {
+  margin-top: 10px;
+}
+
+.logo-Penta {
+  width: 185px;
+  height: 38px;
+}
+
+.input-password-login input {
+  color: white;
+  height: 48px;
+
+  ::placeholder {
+    font-size: 16px;
+  }
+}
+
+.input-password-login > div:first-child {
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+.button-login button {
+  color: white;
+  width: 100% !important;
+  height: 40px !important;
+}
+
+.form-box {
+  width: 250px;
+}

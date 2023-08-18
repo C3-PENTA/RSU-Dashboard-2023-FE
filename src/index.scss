@@ -1,0 +1,116 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: monospace;
+  color: white !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.mantine-Modal-content {
+  border-radius: 8px
+}
+
+.mantine-13mybfv {
+  background-color: rgb(255, 255, 255);
+}
+
+
+.mantine-1ryipl8:not(:first-of-type) {
+  border-style: none;
+}
+
+.mantine-92jry0:not(:first-of-type) {
+  border-style: none;
+}
+
+.mantine-jqg4sp {
+  font-weight: 400;
+  color: white;
+}
+.mantine-jqg4sp:hover {
+  color: white;
+}
+.mantine-Table-root tr {
+  color: white;
+}
+.mantine-Table-root thead th {
+  color: white !important;
+}
+
+.mantine-Modal-content {
+  border-radius: 8px;
+  background-color: #373E47;
+}
+
+.mantine-Modal-root {
+  .mantine-Text-root {
+    color: white;
+  }
+  .mantine-InputWrapper-error {
+    color: red;
+  }
+}
+
+.mantine-Modal-header {
+  background: #373E47;
+  padding: 24px;
+
+  .mantine-Modal-title {
+    // color: #339AF0;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .mantine-UnstyledButton-root {
+    &:hover {
+      background: transparent;
+    }
+    svg {
+      width: 18px;
+      height: 18px;
+      padding: 3px;
+      background: #FB6159;
+      border-radius: 50%;
+      color: #373E47;
+    }
+  }
+}
+
+.mantine-Modal-body {
+  padding: 24px;
+  background: #373E47;
+  .mantine-InputWrapper-label {
+    color: white;
+  }
+  .mantine-UnstyledButton-root {
+    .mantine-Text-root {
+      color: white;
+    }
+    
+  }
+}
+
+table thead tr th {
+  border-bottom: none !important;
+  padding: 10px;
+  height: 40px;
+}
+
+.mantine-g69747 tbody tr td {
+  padding: 10px;
+  height: 40px;
+}
+
+.mantine-Input-input, .mantine-PasswordInput-innerInput {
+  background-color: rgba(45, 55, 72, 1);
+  color: white;
+}
+

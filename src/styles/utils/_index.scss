@@ -1,0 +1,48 @@
+@forward './variables';
+@forward './spacing';
+@forward './atomic';
+@forward './animation';
+@forward './breakpoints';
+
+html,
+body {
+  background: linear-gradient(180deg, rgba(71, 72, 80, 1) 0%, rgba(51, 52, 60, 1) 100%);
+  height: 100%;
+}
+
+.mantine-1vyn0dp,
+.mantine-1vyn0dp:hover {
+  background-color: rgb(191, 191, 191);
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.mantine-1vyn0dp[data-active],
+.mantine-1vyn0dp[data-active]:hover {
+  background-color: rgb(89, 89, 89);
+  color: black;
+}
+
+.mantine-1hta5os {
+  padding-top: 0;
+}
+
+.thead-props {
+  background-color: rgb(89, 89, 89);
+}
+
+.thead-props > tr > th {
+  color: white !important;
+}
+
+.thead-props > tr > th,
+.tbody-props > tr > td {
+  text-align: center !important;
+}
+
+.tbody-props {
+  background-color: rgb(231, 231, 231);
+}
+
+.tbody-props tr:nth-of-type(odd) {
+  background-color: rgb(203, 203, 203) !important;
+}
