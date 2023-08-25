@@ -9,10 +9,12 @@ import {
   Popover,
   NavLink,
   Chip,
+  Skeleton,
 } from '@mantine/core';
 import { AvailEventData } from '../..';
 import { useEffect, useState } from 'react';
 import { Adjustments } from 'tabler-icons-react';
+import { NoData } from '@/components';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -57,9 +59,10 @@ const useStyles = createStyles((theme) => ({
 
 interface NICDataProp {
   data: AvailEventData[];
+  loadedAPI: boolean;
 }
 const NIC = (props: NICDataProp) => {
-  const { data } = props;
+  const { data, loadedAPI } = props;
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
   const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
@@ -165,7 +168,7 @@ const NIC = (props: NICDataProp) => {
       })}
     >
       {title}
-      {data.length > 5 && (
+      {data.length > 0 && (
         <ScrollArea h={260} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
           <Table verticalSpacing="xs">
             <thead
@@ -184,19 +187,14 @@ const NIC = (props: NICDataProp) => {
           </Table>
         </ScrollArea>
       )}
-      {data.length <= 5 && (
-        <Table verticalSpacing="xs">
-          <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-            <tr>
-              <th className={cx(classes.headerCell)}>구분</th>
-              <th className={cx(classes.headerCell)}>위치</th>
-              <th className={cx(classes.headerCell)}>네트워크 연결상태</th>
-              <th className={cx(classes.headerCell)}>속도(Mbps)</th>
-              <th className={cx(classes.headerCell)}>사용량(Byte)</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table>
+      {data.length <= 0 && loadedAPI && <NoData />}
+      {data.length <= 0 && !loadedAPI && (
+        <>
+          <Skeleton height={8} radius="xl" />
+          <Skeleton height={8} mt={6} radius="xl" />
+          <Skeleton height={8} mt={6} radius="xl" />
+          <Skeleton height={8} mt={6} width="70%" radius="xl" />
+        </>
       )}
     </Box>
   );

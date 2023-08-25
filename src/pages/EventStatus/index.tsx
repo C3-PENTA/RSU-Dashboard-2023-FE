@@ -184,8 +184,8 @@ const EventStatus = () => {
   const [type, setType] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const ref = useRef<HTMLSelectElement>(null);
-  const [currentPageSizeAvailability, setCurrentPageSizeAvailability] = useState<number>(20);
-  const [currentPageSizeComunication, setCurrentPageSizeComunication] = useState<number>(20);
+  const [currentPageSizeAvailability, setCurrentPageSizeAvailability] = useState<number>(50);
+  const [currentPageSizeComunication, setCurrentPageSizeComunication] = useState<number>(50);
   const [stDate, setStDate] = useState('');
   const [edDate, setEdDate] = useState('');
   const [nodeID, setNodeID] = useState('');
@@ -599,7 +599,7 @@ const EventStatus = () => {
                 </Title>
                 <NativeSelect
                   data={['10', '20', '50']}
-                  defaultValue={'20'}
+                  defaultValue={'50'}
                   ref={ref}
                   color="white"
                   onChange={(event) => handleChangePageSizeAvailability(event.currentTarget.value)}
@@ -716,7 +716,7 @@ const EventStatus = () => {
                 </Title>
                 <NativeSelect
                   data={['10', '20', '50']}
-                  defaultValue={'20'}
+                  defaultValue={'50'}
                   ref={ref}
                   color="white"
                   onChange={(event) => handleChangePageSizeComunication(event.currentTarget.value)}

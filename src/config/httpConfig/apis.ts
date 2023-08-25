@@ -40,4 +40,6 @@ export enum APIs {
   HANDLE_SHARED_AUTO_REFRESH = '/monitor-management/auto-refresh',
   GET_METADATA = '/monitor-management/metadata',
   UPLOAD_EVENT = '/event-management/import',
+  GET_NOTIFICATIONS = '/event-management/notifications',
+  DEL_NOTIFICATIONS = '/users/ignore_event',
 }

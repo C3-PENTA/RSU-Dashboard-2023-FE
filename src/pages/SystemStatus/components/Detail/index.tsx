@@ -1,16 +1,18 @@
-import { Title, Box, ScrollArea, Popover, Chip, Group, NavLink } from '@mantine/core';
+import { Title, Box, ScrollArea, Popover, Chip, Group, NavLink, Skeleton } from '@mantine/core';
 import ThermometerChart from './components/ThermometerChart';
 import './index.css';
 import { AvailEventData } from '../..';
 import { useEffect, useState } from 'react';
 import { Adjustments } from 'tabler-icons-react';
+import { NoData } from '@/components';
 
 interface DetailDataProp {
   data: AvailEventData[];
+  loadedAPI: boolean;
 }
 
 const Detail = (props: DetailDataProp) => {
-  const { data } = props;
+  const { data, loadedAPI } = props;
   const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -115,7 +117,16 @@ const Detail = (props: DetailDataProp) => {
       })}
     >
       {title}
-      {renderTemperatureList}
+      {data.length <= 0 && loadedAPI && <NoData />}
+      {data.length <= 0 && !loadedAPI && (
+        <>
+          <Skeleton height={8} radius="xl" />
+          <Skeleton height={8} mt={6} radius="xl" />
+          <Skeleton height={8} mt={6} radius="xl" />
+          <Skeleton height={8} mt={6} width="70%" radius="xl" />
+        </>
+      )}
+      {data.length > 0 && renderTemperatureList}
     </Box>
   );
 };
