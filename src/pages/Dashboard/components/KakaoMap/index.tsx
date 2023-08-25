@@ -73,7 +73,7 @@ function Map({ data }: IMapProps) {
     const loadKakaoMap = () => {
       const script = document.createElement('script');
       script.src =
-        '//dapi.kakao.com/v2/maps/sdk.js?appkey=1f9c0376895aa18b4ac294de60fa5a51&libraries=services&autoload=false';
+        '//dapi.kakao.com/v2/maps/sdk.js?appkey=f64357dfd915967223ab53cb9a49f2f8&libraries=services&autoload=false';
       script.addEventListener('load', () => {
         if (mapRef.current) {
           const container = mapRef.current;

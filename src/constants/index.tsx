@@ -215,6 +215,16 @@ export const NOTIFICATIONS = {
   NOTICED__MESS_KOR: '다운로드 파일을 선택하십시오.',
   INVALID_INPUT: 'Invalid Input.',
   INVALID_INPUT_KOR: '다운로드 파일을 선택하십시오.',
+  ERROR: 'Error',
+  ERROR_KOR: '오류',
+  NOTIFICATION: 'Notification',
+  NOTIFICATION_KOR: '알림',
+  DETAIL: 'Detail',
+  DETAIL_KOR: '내역',
+  TIME: 'Time',
+  TIME_KOR: '시간',
+  CLEAR_ALL: 'Clear All',
+  CLEAR_ALL_KOR: '모두 삭제',
 };
 
 export const EVENT_PAGE_QUOTE = {

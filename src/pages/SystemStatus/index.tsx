@@ -90,10 +90,10 @@ const SystemStatus = () => {
           <Disk title="DISK 활용량" data={availEvent} loadedAPI={loadedAPI} />
         </Grid.Col>
         <Grid.Col span={4}>
-          <Detail data={availEvent} />
+          <Detail data={availEvent} loadedAPI={loadedAPI} />
         </Grid.Col>
         <Grid.Col span={8}>
-          <NIC data={availEvent} />
+          <NIC data={availEvent} loadedAPI={loadedAPI} />
         </Grid.Col>
       </Grid>
       {loading && <LoadingOverlay visible={loading} overlayBlur={2} sx={{ position: 'fixed' }} />}
