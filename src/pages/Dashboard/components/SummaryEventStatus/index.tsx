@@ -162,7 +162,7 @@ function SummaryEventStatus() {
   const filteredData = eventStatusData.filter((item) => selectedNodeIds.includes(item.customId));
 
   useEffect(() => {
-    getEventStatusSummary('all').subscribe({
+    getEventStatusSummary('hour_ago').subscribe({
       next: ({ data }) => {
         setEventStatusData(data.summary);
         setSelectedNodeIds(data.summary.map((item) => item.customId));

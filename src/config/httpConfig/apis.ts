@@ -27,7 +27,7 @@ export enum APIs {
   DELETE_USER = '/users/',
   GET_LIST_NODE_OF_RSU = '/rsu',
   GET_EVENT_BY_SRC_NODE = '/event-management/events/src-node/',
-  GET_RSU_USAGE = '/rsu/node/rsu-usage',
+  GET_RSU_USAGE = '/event-management/rsu-usage',
   GET_AVAIL_EVENT = '/event-management/latest-events',
   GET_SYSTEM_STATUS_SUMMARY = 'rsu/node/usage',
   GET_EVENT_STATUS_SUMMARY = 'event-management/events/summary',
