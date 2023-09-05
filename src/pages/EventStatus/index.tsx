@@ -8,7 +8,7 @@ import { getAutoRefresh } from '@/services/HeaderAPI';
 import {
   changeStatusGenerator,
   deleteEvent,
-  downloadEvent,
+  downloadEvents,
   getEventStatus,
   getMetaData,
   getNewEvents,
@@ -385,16 +385,17 @@ const EventStatus = () => {
     });
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (log: boolean) => {
     const listInfo: ListEventIds = {
       type: type,
       eventIds: listEvent,
+      log: log,
     };
 
-    downloadEvent(listInfo).subscribe({
+    downloadEvents(listInfo).subscribe({
       next: (response: any) => {
-        const blob = new Blob([response.data], { type: 'application/zip' });
-        const filename = 'data.zip';
+        const blob = new Blob([response.data], { type: 'application/csv' });
+        const filename = 'data.csv';
         saveAs(blob, filename);
       },
     });
@@ -612,7 +613,7 @@ const EventStatus = () => {
                 leftIcon={<Download size={14} strokeWidth={3} color={'white'} />}
                 onClick={() => {
                   if (listEvent.length > 0) {
-                    handleDownload();
+                    handleDownload(true);
                   } else {
                     notifications.show({
                       icon: <CircleX size="1rem" color="red" />,
@@ -624,10 +625,29 @@ const EventStatus = () => {
                   }
                 }}
               >
-                내보내기
+                로그 내보내기
               </Button>
               {currentUser.username === 'root' ? (
                 <>
+                  <Button
+                    className={cx(classes.greenButton)}
+                    leftIcon={<Download size={14} strokeWidth={3} color={'white'} />}
+                    onClick={() => {
+                      if (listEvent.length > 0) {
+                        handleDownload(false);
+                      } else {
+                        notifications.show({
+                          icon: <CircleX size="1rem" color="red" />,
+                          autoClose: 2000,
+                          color: 'red',
+                          title: NOTIFICATIONS.NOTICED_KOR,
+                          message: NOTIFICATIONS.NOTICED__MESS_KOR,
+                        });
+                      }
+                    }}
+                  >
+                    내보내기
+                  </Button>
                   {status ? (
                     <FileButton onChange={isImport} accept=".csv">
                       {(props) => (
@@ -729,7 +749,7 @@ const EventStatus = () => {
                 leftIcon={<Download size={14} strokeWidth={3} color={'white'} />}
                 onClick={() => {
                   if (listEvent.length > 0) {
-                    handleDownload();
+                    handleDownload(true);
                   } else {
                     notifications.show({
                       icon: <CircleX size="1rem" color="red" />,
@@ -741,10 +761,29 @@ const EventStatus = () => {
                   }
                 }}
               >
-                내보내기
+                로그 내보내기
               </Button>
               {currentUser.username === 'root' ? (
                 <>
+                  <Button
+                    className={cx(classes.greenButton)}
+                    leftIcon={<Download size={14} strokeWidth={3} color={'white'} />}
+                    onClick={() => {
+                      if (listEvent.length > 0) {
+                        handleDownload(false);
+                      } else {
+                        notifications.show({
+                          icon: <CircleX size="1rem" color="red" />,
+                          autoClose: 2000,
+                          color: 'red',
+                          title: NOTIFICATIONS.NOTICED_KOR,
+                          message: NOTIFICATIONS.NOTICED__MESS_KOR,
+                        });
+                      }
+                    }}
+                  >
+                    내보내기
+                  </Button>
                   {status ? (
                     <FileButton onChange={isImport} accept=".csv">
                       {(props) => (

@@ -33,7 +33,7 @@ export enum APIs {
   GET_EVENT_STATUS_SUMMARY = 'event-management/events/summary',
   GET_EVENT_STATUS = '/event-management/events',
   GET_NEW_EVENTS = 'event-management/new-events',
-  DOWNLOAD = '/event-management/export/csv',
+  DOWNLOAD = '/event-management/export/log',
   GET_STATUS_START_STOP = 'event-management/generator/status',
   CHANGE_GENERATOR = 'event-management/generator/toggle',
   DELETE_EVENT = 'event-management',

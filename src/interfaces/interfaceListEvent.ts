@@ -93,6 +93,7 @@ export interface EventInfo {
 export interface ListEventIds {
   type: number;
   eventIds: string[];
+  log: boolean;
 }
 
 export interface MetaData {
