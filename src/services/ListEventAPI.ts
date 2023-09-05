@@ -43,7 +43,7 @@ export const getEventStatus = (
     ),
   );
 
-export const downloadEvent = (payload: ListEventIds) =>
+export const downloadEvents = (payload: ListEventIds) =>
   from(
     http.post<ListEventIds>(APIs.DOWNLOAD, payload, {
       responseType: 'blob',
