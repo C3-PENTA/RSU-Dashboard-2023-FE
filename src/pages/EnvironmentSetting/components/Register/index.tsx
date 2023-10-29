@@ -1,4 +1,3 @@
-import { upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { TextInput, PasswordInput, Box, Group, Button, Stack, Select, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';

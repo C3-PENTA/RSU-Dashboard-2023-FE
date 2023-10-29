@@ -15,10 +15,10 @@ interface CommunicationProps {
     nodeType: string;
     srcNode: string;
     destNode: string;
-    drivingNegotiationsClass: string;
+    cooperationClass: string;
+    communicationClass: string;
+    sessionID: string;
     method: string;
-    sourceNode: string;
-    destinationNode: string;
     messageType: number;
     detail: string;
     status: number;
@@ -147,7 +147,9 @@ const CommunicationTable = (props: CommunicationProps) => {
                 </span>
               </div>
             </th>
-            <th>주행협상 클래스</th>
+            <th>Cooperation Class</th>
+            <th>Session ID</th>
+            <th>Communication Class</th>
             <th>노드 ID</th>
             <th>RSU 명칭</th>
             <th>통신 방법</th>
@@ -171,7 +173,9 @@ const CommunicationTable = (props: CommunicationProps) => {
                   }
                 />
               </td>
-              <td className={cx(classes.cell)}>{items.drivingNegotiationsClass}</td>
+              <td className={cx(classes.cell)}>{items.cooperationClass}</td>
+              <td className={cx(classes.cell)}>{items.sessionID}</td>
+              <td className={cx(classes.cell)}>{items.communicationClass}</td>
               <td className={cx(classes.cell)}>{items.nodeId}</td>
               <td className={cx(classes.cell)}>{items.nodeType}</td>
               <td className={cx(classes.cell)}>{items.method}</td>

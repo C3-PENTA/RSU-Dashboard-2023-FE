@@ -4,9 +4,10 @@ export interface User {
   name: string;
   email: string;
   role: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
 export interface IUserUpdate {
   id?: string;
   username?: string;
@@ -14,6 +15,6 @@ export interface IUserUpdate {
   name?: string;
   email?: string;
   role?: number;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

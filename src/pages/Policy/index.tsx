@@ -12,16 +12,17 @@ import { PAGE_TITLE, Role } from '@/constants';
 import { LoginContext } from '@/App';
 
 const initPolicy = {
-  id: '',
-  name: '',
+  policyID: '',
+  policyName: '',
   description: '',
-  cpu_limit: 0,
-  cpu_thresh: 0,
-  num_edges: 0,
-  is_activated: false,
+  cpuThresholdSelf: 0,
+  cpuThresholdDist: 0,
+  numTargets: 0,
+  isActivated: false,
   assignedNodes: [],
   unAssignedNodes: [],
 };
+
 const Policy = () => {
   const { setLoginState, currentUser } = useContext(LoginContext);
 
@@ -62,7 +63,7 @@ const Policy = () => {
       setLoginState(false);
     } else {
       const policy = {
-        is_activated: value,
+        isActivated: value,
       };
       setLoadingInternal(true);
       updatePolicyById(policyId, policy).subscribe({
@@ -86,8 +87,8 @@ const Policy = () => {
   const renderNodeList = (nodeList: INodeByPolicy[]) => {
     return nodeList.map((node: INodeByPolicy) => {
       return (
-        <Badge key={node.nodeId}>
-          <Text>{node.nodeName}</Text>
+        <Badge key={node.nodeID}>
+          <Text>{node.rsuID}</Text>
         </Badge>
       );
     });
@@ -101,17 +102,17 @@ const Policy = () => {
       ) : polices.length > 0 ? (
         polices.map((policy) => {
           const {
-            id,
-            name,
+            policyID,
+            policyName,
             description,
-            cpu_limit,
-            cpu_thresh,
-            num_edges,
-            is_activated,
+            cpuThresholdSelf,
+            cpuThreshDist,
+            numTargets,
+            isActivated,
             assignedNodes,
           } = policy;
           return (
-            <Box key={`${id}-${name}`}>
+            <Box key={`${policyID}-${policyName}`}>
               <Card
                 className="policy-container"
                 shadow={'sm'}
@@ -126,7 +127,7 @@ const Policy = () => {
                     <Box>
                       <Group>
                         <Text weight={'bold'} color={'white'} size={20}>
-                          {name}
+                          {policyName}
                         </Text>
                         <Button
                           onClick={() => onOpenModal(policy)}
@@ -157,23 +158,23 @@ const Policy = () => {
                   <Group grow style={{ alignItems: 'center', display: 'flex' }}>
                     <Group>
                       <Text className="text-sm" color="white">
-                        CPU Limit: {cpu_limit || 0}%
+                        CPU Limit: {cpuThresholdSelf || 0}%
                       </Text>
                     </Group>
                     <Group>
                       <Text className="text-sm" color="white">
-                        CPU Thresh: {cpu_thresh || 100}%
+                        CPU Thresh: {cpuThreshDist || 100}%
                       </Text>
                     </Group>
                     <Group>
                       <Text className="text-sm" color="white">
-                        Number resend node: {num_edges || 0}
+                        Number resend node: {numTargets || 0}
                       </Text>
                     </Group>
                     <Switch
                       style={{ display: 'flex', color: 'white' }}
                       label={
-                        is_activated ? (
+                        isActivated ? (
                           <Text weight={'bold'} color={'white'}>
                             Activated
                           </Text>
@@ -183,8 +184,8 @@ const Policy = () => {
                           </Text>
                         )
                       }
-                      checked={is_activated}
-                      onChange={(event) => onChangeValue(id, event.currentTarget.checked)}
+                      checked={isActivated}
+                      onChange={(event) => onChangeValue(policyID, event.currentTarget.checked)}
                     />
                   </Group>
                 </Card.Section>

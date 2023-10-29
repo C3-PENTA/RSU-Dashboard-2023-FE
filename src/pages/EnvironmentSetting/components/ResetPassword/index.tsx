@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { PasswordInput, Box, Group, Button, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { AUTHEN_QUOTE, ENV_PAGE_QUOTE, NOTIFICATIONS, TABLE_HEADER_KOR } from '@/constants';
+import { AUTHEN_QUOTE, ENV_PAGE_QUOTE, NOTIFICATIONS } from '@/constants';
 import { Dispatch, SetStateAction } from 'react';
 import { CircleCheck } from 'tabler-icons-react';
 import { updateUserById } from '@/services/EnvironmentSettingAPI';

@@ -73,7 +73,9 @@ function Map({ data }: IMapProps) {
     const loadKakaoMap = () => {
       const script = document.createElement('script');
       script.src =
-        '//dapi.kakao.com/v2/maps/sdk.js?appkey=f64357dfd915967223ab53cb9a49f2f8&libraries=services&autoload=false';
+        '//dapi.kakao.com/v2/maps/sdk.js?appkey=' +
+        import.meta.env.VITE_KAKAO_MAP_API_KEY +
+        '&libraries=services&autoload=false';
       script.addEventListener('load', () => {
         if (mapRef.current) {
           const container = mapRef.current;
@@ -81,7 +83,7 @@ function Map({ data }: IMapProps) {
             const positions: IPositions[] = data.map((item) => {
               const position: IPositions = {
                 id: item.id,
-                content: `<div>${item.custom_id}</div>`,
+                content: `<div>${item.rsuID}</div>`,
                 latlng: new kakao.maps.LatLng(Number(item.latitude), Number(item.longitude)),
               };
               Cx += Number(item.latitude);
