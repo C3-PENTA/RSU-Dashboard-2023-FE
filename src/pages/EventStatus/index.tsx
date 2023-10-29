@@ -42,7 +42,7 @@ import {
   X,
 } from 'tabler-icons-react';
 
-import { AvailabilityTable, CommunicaitonTable, Filter, Modal, Pagination } from './components';
+import { AvailabilityTable, CommunicationTable, Filter, Modal, Pagination } from './components';
 import CustomeLoader from '@/assets/icons/CustomeLoader';
 
 const initEvent: EventInfo = {
@@ -829,7 +829,7 @@ const EventStatus = () => {
               ) : null}
             </Group>
           </Group>
-          <CommunicaitonTable
+          <CommunicationTable
             type={type}
             setOrder={(newValue) => setOrder(newValue)}
             setListEvent={(newValue) => setListEvent(newValue)}

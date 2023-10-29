@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { HeaderTitle, NoData, NotAuthorized } from '@/components';
 import { ENV_PAGE_QUOTE, PAGE_TITLE, Role, TABLE_HEADER_KOR } from '@/constants';
 import { IUserUpdate, User } from '@/interfaces/interfaceUser';
@@ -31,8 +30,8 @@ const initUpdateUser = {
   name: '',
   email: '',
   role: '',
-  created_at: '',
-  updated_at: '',
+  createdAt: '',
+  updatedAt: '',
 };
 
 const useStyles = createStyles((theme) => ({
@@ -144,10 +143,10 @@ const EnvironmentSetting = () => {
           <td className={cx(classes.cell)}>{user.email}</td>
           <td className={cx(classes.cell)}>{user.role}</td>
           <td className={cx(classes.cell)}>
-            {moment(user.created_at).format('YYYY-MM-DD HH:mm:ss')}
+            {moment(user.createdAt).format('YYYY-MM-DD HH:mm:ss')}
           </td>
           <td className={cx(classes.cell)}>
-            {moment(user.updated_at).format('YYYY-MM-DD HH:mm:ss')}
+            {moment(user.createdAt).format('YYYY-MM-DD HH:mm:ss')}
           </td>
           <td className={cx(classes.cell)}>
             <Group align="center">

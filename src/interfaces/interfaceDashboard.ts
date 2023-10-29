@@ -5,26 +5,17 @@ export interface IRsuNodes {
 
 export interface IRsuData {
   id: string;
-  custom_id: string;
+  rsuID: string;
+  name: string;
   status: boolean;
-  dns: string;
   latitude: string;
   longitude: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface INodeData {
-  nodes: {
-    id: string;
-    custom_id: string;
-    status: string;
-    dns: string;
-    latitude: string;
-    longitude: string;
-    created_at: string;
-    updated_at: string;
-  }[];
+  nodes: IRsuData[];
 }
 
 export interface ISummarySystemStatus {

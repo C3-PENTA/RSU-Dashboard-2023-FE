@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { IPolicy, IPolicyUpdate } from '@/interfaces/interfacePolicy';
 import { updatePolicyById, updatePolicyOfNode } from '@/services/PolicyAPI';
 import ValidModal from '../ValidModal';
@@ -43,7 +42,7 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
     getListRSU().subscribe({
       next: ({ data }) => {
         const newState = data.nodes.map((item) => {
-          return { label: item.custom_id, value: item.id };
+          return { label: item.rsuID, value: item.id };
         });
         setListNode(newState);
       },
@@ -53,18 +52,18 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
     });
 
     const newNodeSelected: string[] = data.assignedNodes.map((item) => {
-      return item.nodeId;
+      return item.nodeID;
     });
     setNodeSelected(newNodeSelected);
   };
 
-  const { id, name, cpu_limit, cpu_thresh, num_edges, is_activated } = policy;
+  const { policyID, policyName, cpuThresholdSelf, cpuThreshDist, numTargets, isActivated } = policy;
 
   const updateNode = (nodeId: string[], policyId: string) => {
     try {
       nodeId.length > 0 &&
         nodeId.map((id: string) => {
-          updatePolicyOfNode(id, { policy_id: policyId });
+          updatePolicyOfNode(id, { policyId: policyId });
         });
     } catch (err) {
       console.log(err);
@@ -73,10 +72,10 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
   const onSubmit = (policyId: string) => {
     if (policy) {
       const checkInValidPolicy =
-        Number(policy.cpu_limit) < 0 ||
-        Number(policy.cpu_limit) > 100 ||
-        Number(policy.cpu_thresh) < 0 ||
-        Number(policy.cpu_thresh) > 100;
+        Number(policy.cpuThresholdSelf) < 0 ||
+        Number(policy.cpuThresholdSelf) > 100 ||
+        Number(policy.cpuThreshDist) < 0 ||
+        Number(policy.cpuThreshDist) > 100;
       if (checkInValidPolicy) {
         notifications.show({
           icon: <AlertCircle size="1rem" color="red" />,
@@ -105,11 +104,11 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
 
   const updatePolicy = (policyId: string, policy: IPolicyUpdate) => {
     const updateData = {
-      name: policy.name,
-      cpu_limit: policy.cpu_limit,
-      cpu_thresh: policy.cpu_thresh,
-      num_edges: policy.num_edges,
-      is_activated: policy.is_activated,
+      name: policy.policyName,
+      cpuLimit: policy.cpuThresholdSelf,
+      cpuThresh: policy.cpuThreshDist,
+      numEdges: policy.numTargets,
+      isActivated: policy.isActivated,
     };
     updatePolicyById(policyId, updateData).subscribe({
       next: () => {
@@ -124,29 +123,29 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
   };
 
   return (
-    <Box key={id}>
-      <Title order={2} align="center" color="white">{`Policy Detail: ${policy.name}`}</Title>
+    <Box key={policyID}>
+      <Title order={2} align="center" color="white">{`Policy Detail: ${policy.policyName}`}</Title>
       <Group style={{ justifyContent: 'center', marginTop: '0.5rem' }} my="sm" position="apart">
         <Switch
           label={
-            is_activated ? (
+            isActivated ? (
               <Text color="white">Activated</Text>
             ) : (
               <Text color="white">Deactivated</Text>
             )
           }
-          checked={is_activated}
+          checked={isActivated}
           onChange={(event) => {
-            onChangeValue('is_activated', event.currentTarget.checked);
+            onChangeValue('isActivated', event.currentTarget.checked);
           }}
         />
       </Group>
       <Group mt="md" align={'flex-start'} my="sm" position="apart">
         <Text color="white">Name:</Text>
         <Input
-          onChange={(value) => onChangeValue('name', value.target.value)}
+          onChange={(value) => onChangeValue('policyName', value.target.value)}
           className="modal-input"
-          value={name || ''}
+          value={policyName || ''}
           placeholder="Input Value"
         />
       </Group>
@@ -154,8 +153,8 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
         <Text color="white">CPU Thresh</Text>
         <Input
           className="modal-input"
-          value={cpu_thresh || ''}
-          onChange={(value) => onChangeValue('cpu_thresh', value.target.value)}
+          value={cpuThreshDist || ''}
+          onChange={(value) => onChangeValue('cpuThreshDist', value.target.value)}
           placeholder="Input Value"
         />
       </Group>
@@ -163,8 +162,8 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
         <Text color="white">CPU Limit:</Text>
         <Input
           className="modal-input"
-          value={cpu_limit || ''}
-          onChange={(value) => onChangeValue('cpu_limit', value.target.value)}
+          value={cpuThresholdSelf || ''}
+          onChange={(value) => onChangeValue('cpuThresholdSelf', value.target.value)}
           placeholder="Input Value"
         />
       </Group>
@@ -172,8 +171,8 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
         <Text color="white">Number resend node:</Text>
         <Input
           className="modal-input"
-          value={num_edges || ''}
-          onChange={(value) => onChangeValue('num_edges', value.target.value)}
+          value={numTargets || ''}
+          onChange={(value) => onChangeValue('numTargets', value.target.value)}
           placeholder="Input Value"
         />
       </Group>
@@ -195,7 +194,7 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
         </Button>
         <Button
           onClick={() => {
-            onSubmit(id);
+            onSubmit(policyID);
           }}
         >
           Save
@@ -219,7 +218,12 @@ const PolicyModalDetail = (props: PolicyModalDetailProps) => {
         onClose={toggleValidModal}
         centered
       >
-        <ValidModal onClose={toggleValidModal} dataId={id} data={policy} onSave={updatePolicy} />
+        <ValidModal
+          onClose={toggleValidModal}
+          dataId={policyID}
+          data={policy}
+          onSave={updatePolicy}
+        />
       </Modal>
     </Box>
   );

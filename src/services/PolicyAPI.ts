@@ -8,5 +8,5 @@ export const getNodeByPolicy = (policyId: string) =>
   from(http.get<INodeByPolicy[]>(APIs.GET_LIST_NODE_BY_POLICY + policyId));
 export const updatePolicyById = (policyId: string, payload: IPolicyUpdate) =>
   from(http.patch<INodeByPolicy[]>(APIs.UPDATE_POLICY + policyId, payload));
-export const updatePolicyOfNode = (nodeId: string, payload: { policy_id: string }) =>
+export const updatePolicyOfNode = (nodeId: string, payload: { policyId: string }) =>
   from(http.patch<INodeByPolicy[]>(APIs.UPDATE_POLICY_OF_NODE + nodeId, payload));

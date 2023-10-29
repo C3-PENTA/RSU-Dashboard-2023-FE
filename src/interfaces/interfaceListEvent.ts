@@ -28,6 +28,7 @@ export interface ISocketEvent {
   updatedAt?: string;
   animated?: boolean;
 }
+
 export interface IListEvent {
   id: string;
   sendNode: string;
@@ -50,6 +51,7 @@ export interface IListEventRes {
   status: string;
   policyName: string;
 }
+
 export interface IListEventPage {
   events: IListEventRes[];
   totalPage: number;
@@ -70,7 +72,7 @@ export interface ResHistoricalEvent {
   label: number;
   status: number;
 }
-// update event
+
 export interface AvailabilityEvent {
   id: string;
   name: string;
