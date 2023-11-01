@@ -1,7 +1,7 @@
 import { Path } from '@/config/path';
 import { LazyExoticComponent } from 'react';
 import { Socket } from 'socket.io-client';
-import { ISocketEvent } from './interfaceListEvent';
+import { IEdgeConnectionStatus, ISocketEvent } from './interfaceListEvent';
 
 /**
  * Get all 'values' of `T` interface
@@ -51,6 +51,11 @@ export interface IEventStore {
   setCommunicationEvent: (newState?: ISocketEvent[]) => void;
 }
 
+export interface IEdgeConnectionStatusStore {
+  isEdgeConnected: string;
+  setEdgeConnectionStatus: (newState?: string) => void;
+}
+
 export interface IHelperStatus {
   key: string;
   status: string;
@@ -58,7 +63,7 @@ export interface IHelperStatus {
   color: string;
 }
 
-export interface IStore extends ISystemStore, INodeStore, IEventStore {}
+export interface IStore extends ISystemStore, INodeStore, IEventStore, IEdgeConnectionStatusStore {}
 
 export interface ISharedVariable {
   variable_name: string;

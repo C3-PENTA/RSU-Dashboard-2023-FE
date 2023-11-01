@@ -23,6 +23,8 @@ import { logout } from '@/services/AuthenticationAPI';
 import { NOTIFICATIONS, Role } from '@/constants';
 import { INotifications } from '@/interfaces/interfaceNotification';
 import { delNotification, pushNotification } from '@/services/NotificationsAPI';
+import useGlobalStore from '@/stores';
+import { SocketEvents } from '@/config/httpConfig/socket';
 const useStyles = createStyles((theme) => ({
   header: {
     alignItems: 'center',
@@ -117,6 +119,10 @@ const initNotifications: INotifications = {
 };
 
 const HeaderNavBar = () => {
+  const { socket } = useGlobalStore((state) => ({
+    socket: state.socket,
+  }));
+
   const { setLoginState, currentUser } = useContext(LoginContext);
   const [notifications, setNotification] = useState(initNotifications);
   const { classes, cx } = useStyles();
@@ -266,6 +272,8 @@ const HeaderNavBar = () => {
           className={cx(classes.element)}
           onClick={() => {
             if (item.label === '로그아웃​') {
+              socket.off(SocketEvents.KEEP_ALIVE);
+              socket.off(SocketEvents.NEW_NOTIFICATION);
               setLoginState(false);
               logout().subscribe({
                 error(err) {

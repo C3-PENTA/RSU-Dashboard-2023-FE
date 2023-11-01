@@ -48,7 +48,6 @@ const AuthenticationForm = (props: AuthenProps) => {
       },
       error(err) {
         setIsWrongCredential(true);
-        console.log(err);
       },
     });
   };

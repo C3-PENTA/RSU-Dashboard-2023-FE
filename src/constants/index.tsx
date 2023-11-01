@@ -11,6 +11,12 @@ export const SERVER_STATUS = {
   NOT_WORK: 'notWork',
 };
 
+export enum EdgeSystemConnection {
+  Connected = '연결됨',
+  Disconnected = '연결이 끊김',
+  Unknown = 'Unknown',
+}
+
 export const CERTIFICATE_ISSUE = {
   NONE: 'None',
   NO_CERT: 'No Certificate',

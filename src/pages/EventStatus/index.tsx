@@ -319,29 +319,29 @@ const EventStatus = () => {
     };
   }, [currentPageSizeAvailability, currentPageSizeComunication]);
 
-  const getStartStop = async () => {
-    getStatusStartStop().subscribe({
-      next: (response: any) => {
-        if (response.data.status === 'OFF') {
-          setStatus(true);
-        } else {
-          setStatus(false);
-        }
-      },
-      error: () => {
-        setLoading(false);
-        setLoadedAPI(true);
-      },
-    });
-  };
-  const changeGeneratorStatus = async () => {
-    changeStatusGenerator().subscribe({
-      error: () => {
-        setLoading(false);
-        setLoadedAPI(true);
-      },
-    });
-  };
+  // const getStartStop = async () => {
+  //   getStatusStartStop().subscribe({
+  //     next: (response: any) => {
+  //       if (response.data.status === 'OFF') {
+  //         setStatus(true);
+  //       } else {
+  //         setStatus(false);
+  //       }
+  //     },
+  //     error: () => {
+  //       setLoading(false);
+  //       setLoadedAPI(true);
+  //     },
+  //   });
+  // };
+  // const changeGeneratorStatus = async () => {
+  //   changeStatusGenerator().subscribe({
+  //     error: () => {
+  //       setLoading(false);
+  //       setLoadedAPI(true);
+  //     },
+  //   });
+  // };
   const deleteAllEvent = async () => {
     deleteEvent(type, 'true').subscribe({
       next: (response: any) => {
@@ -354,9 +354,9 @@ const EventStatus = () => {
     });
   };
 
-  useEffect(() => {
-    getStartStop();
-  }, [status]);
+  // useEffect(() => {
+  //   getStartStop();
+  // }, [status]);
 
   const getEvent = async () => {
     setLoading(true);
@@ -482,34 +482,34 @@ const EventStatus = () => {
               ]}
             ></Modal>
           );
-        case 'startstop':
-          return (
-            <Modal
-              onClose={toggle}
-              typeBt={typeButton}
-              isOpen={isOpen}
-              header={EVENT_PAGE_QUOTE.WARNING}
-              caption={status ? EVENT_PAGE_QUOTE.NOTICED_START : EVENT_PAGE_QUOTE.NOTICED_STOP}
-              listButton={[
-                {
-                  title: EVENT_PAGE_QUOTE.BUTTON_CONTINUE,
-                  onPress: () => {
-                    changeGeneratorStatus();
-                    setStatus(!status);
-                    toggle();
-                  },
-                  buttonType: 'continue',
-                },
-                {
-                  title: EVENT_PAGE_QUOTE.BUTTON_CANCEL,
-                  onPress: () => {
-                    toggle();
-                  },
-                  buttonType: 'cancel',
-                },
-              ]}
-            ></Modal>
-          );
+        // case 'startstop':
+        //   return (
+        //     <Modal
+        //       onClose={toggle}
+        //       typeBt={typeButton}
+        //       isOpen={isOpen}
+        //       header={EVENT_PAGE_QUOTE.WARNING}
+        //       caption={status ? EVENT_PAGE_QUOTE.NOTICED_START : EVENT_PAGE_QUOTE.NOTICED_STOP}
+        //       listButton={[
+        //         {
+        //           title: EVENT_PAGE_QUOTE.BUTTON_CONTINUE,
+        //           onPress: () => {
+        //             changeGeneratorStatus();
+        //             setStatus(!status);
+        //             toggle();
+        //           },
+        //           buttonType: 'continue',
+        //         },
+        //         {
+        //           title: EVENT_PAGE_QUOTE.BUTTON_CANCEL,
+        //           onPress: () => {
+        //             toggle();
+        //           },
+        //           buttonType: 'cancel',
+        //         },
+        //       ]}
+        //     ></Modal>
+        //   );
         case 'clear':
           return (
             <Modal
@@ -669,7 +669,7 @@ const EventStatus = () => {
                       {EVENT_PAGE_QUOTE.BUTTON_UPLOAD}
                     </Button>
                   )}
-                  <Button
+                  {/* <Button
                     leftIcon={
                       status ? (
                         <PlayerPlay size={14} strokeWidth={3} color={'white'} />
@@ -681,7 +681,7 @@ const EventStatus = () => {
                     onClick={handleStartStop}
                   >
                     {status ? EVENT_PAGE_QUOTE.BUTTON_START : EVENT_PAGE_QUOTE.BUTTON_STOP}
-                  </Button>
+                  </Button> */}
                   <Button
                     leftIcon={<EraserOff size={14} strokeWidth={3} color={'white'} />}
                     className={cx(classes.grayButton)}
@@ -805,7 +805,7 @@ const EventStatus = () => {
                       {EVENT_PAGE_QUOTE.BUTTON_UPLOAD}
                     </Button>
                   )}
-                  <Button
+                  {/* <Button
                     leftIcon={
                       status ? (
                         <PlayerPlay size={14} strokeWidth={3} color={'white'} />
@@ -817,7 +817,7 @@ const EventStatus = () => {
                     onClick={handleStartStop}
                   >
                     {status ? EVENT_PAGE_QUOTE.BUTTON_START : EVENT_PAGE_QUOTE.BUTTON_STOP}
-                  </Button>
+                  </Button> */}
                   <Button
                     leftIcon={<EraserOff size={18} strokeWidth={2} color={'white'} />}
                     className={cx(classes.grayButton)}
