@@ -150,12 +150,12 @@ const CommunicationTable = (props: CommunicationProps) => {
             <th>Cooperation Class</th>
             <th>Session ID</th>
             <th>Communication Class</th>
+            <th>메시지 종류</th>
             <th>노드 ID</th>
             <th>RSU 명칭</th>
             <th>통신 방법</th>
             <th>송신 노드</th>
             <th>수신 노드</th>
-            <th>메시지 종류</th>
             <th>오류 상세</th>
           </tr>
         </thead>
@@ -176,12 +176,12 @@ const CommunicationTable = (props: CommunicationProps) => {
               <td className={cx(classes.cell)}>{items.cooperationClass}</td>
               <td className={cx(classes.cell)}>{items.sessionID}</td>
               <td className={cx(classes.cell)}>{items.communicationClass}</td>
+              <td className={cx(classes.cell)}>{items.messageType}</td>
               <td className={cx(classes.cell)}>{items.nodeId}</td>
               <td className={cx(classes.cell)}>{items.nodeType}</td>
               <td className={cx(classes.cell)}>{items.method}</td>
               <td className={cx(classes.cell)}>{items.srcNode}</td>
               <td className={cx(classes.cell)}>{items.destNode}</td>
-              <td className={cx(classes.cell)}>{items.messageType}</td>
               <td className={cx(classes.cell)}>{items.detail}</td>
             </tr>
           ))}

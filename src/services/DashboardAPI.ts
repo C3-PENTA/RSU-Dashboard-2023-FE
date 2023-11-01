@@ -8,7 +8,7 @@ import {
 } from '@/interfaces/interfaceDashboard';
 import { from } from 'rxjs';
 
-export const getRSUInfomation = () => from(http.get<IRsuNodes>(APIs.GET_LIST_NODE_OF_RSU));
+export const getRSUInformation = () => from(http.get<IRsuNodes>(APIs.GET_LIST_NODE_OF_RSU));
 export const getSystemStatusSummary = () =>
   from(http.get<ISummarySystemStatus[]>(APIs.GET_AVAIL_EVENT + '?type=1'));
 export const getEventStatusSummary = (time: string) =>

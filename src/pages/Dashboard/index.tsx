@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Map } from './components';
 import { IRsuData } from '@/interfaces/interfaceDashboard';
-import { getRSUInfomation } from '@/services/DashboardAPI';
+import { getRSUInformation } from '@/services/DashboardAPI';
 import { useLoading } from '@/LoadingContext';
-import { Box, LoadingOverlay } from '@mantine/core';
+import { LoadingOverlay } from '@mantine/core';
 import { getAutoRefresh } from '@/services/HeaderAPI';
 import { AUTO_REFRESH_TIME } from '@/constants';
 
@@ -33,7 +33,7 @@ const Dashboard = () => {
   }, []);
   const getData = () => {
     setLoading(true);
-    getRSUInfomation().subscribe({
+    getRSUInformation().subscribe({
       next: ({ data }) => {
         setRsuData(data.nodes);
         setLoading(false);

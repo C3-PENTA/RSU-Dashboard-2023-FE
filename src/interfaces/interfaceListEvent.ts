@@ -107,3 +107,12 @@ export interface MetaData {
   messageType: { [type: string]: number };
   nodeType: { [type: string]: number };
 }
+
+export interface INotificationEventSocket {
+  nodeID: string;
+  detail: string;
+}
+
+export interface IEdgeConnectionStatus {
+  status: string;
+}
