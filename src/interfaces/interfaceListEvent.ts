@@ -11,6 +11,20 @@ export interface IListEventResData extends IPaginationData {
   listEvent: IListEvent[];
 }
 
+export interface IEvent {
+  [key: string]: any;
+  type: number;
+  page: number;
+  limit: number;
+  startDate?: string;
+  endDate?: string;
+  nodeID?: string;
+  status?: number;
+  drivingNegotiation?: string;
+  messageType?: string;
+  order?: string;
+}
+
 export interface IFile {
   id: string;
   fileName: string;

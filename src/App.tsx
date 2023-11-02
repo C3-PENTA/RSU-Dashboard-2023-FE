@@ -16,9 +16,6 @@ import { Path } from './config/path';
 import { LoadingProvider } from './LoadingContext';
 import { customTheme } from './config/mantineProvider';
 import { CircleX } from 'tabler-icons-react';
-import { getNewEvents } from './services/ListEventAPI';
-import { getAutoRefresh } from './services/HeaderAPI';
-import { AUTO_REFRESH_TIME } from './constants';
 
 const initUser: userInfo = {
   username: '',
@@ -65,80 +62,9 @@ function App() {
     if (loginState && isFirstAccess) {
       navigate('/');
       setIsFirstAccess(false);
-      getAutoRefresh().subscribe({
-        next: ({ data }) => {
-          data
-            ? getNewEvents(1).subscribe({
-                next: ({ data }) => {
-                  data.forEach((event, index) => {
-                    setTimeout(() => {
-                      notifications.show({
-                        icon: <CircleX size="1rem" color="red" />,
-                        autoClose: 3000,
-                        color: 'red',
-                        title: 'Error: ' + event.nodeId,
-                        message: event.detail,
-                      });
-                    }, 200 * index);
-                  });
-                },
-                error(err) {
-                  console.log(err);
-                },
-              })
-            : notifications.show({
-                icon: <CircleX size="1rem" color="red" />,
-                autoClose: 3500,
-                color: 'red',
-                title: 'Maintaining',
-                message: 'Auto refresh is off',
-              });
-        },
-        error(err) {
-          console.log(err);
-        },
-      });
     }
     if (!loginState) {
       navigate('/login');
-    } else {
-      const interval = setInterval(() => {
-        getAutoRefresh().subscribe({
-          next: ({ data }) => {
-            if (window.location.href.includes('event-status')) return;
-            data
-              ? getNewEvents(1).subscribe({
-                  next: ({ data }) => {
-                    data.forEach((event, index) => {
-                      setTimeout(() => {
-                        notifications.show({
-                          icon: <CircleX size="1rem" color="red" />,
-                          autoClose: 3000,
-                          color: 'red',
-                          title: 'Error: ' + event.nodeId,
-                          message: event.detail,
-                        });
-                      }, 200 * index);
-                    });
-                  },
-                  error(err) {
-                    console.log(err);
-                  },
-                })
-              : notifications.show({
-                  icon: <CircleX size="1rem" color="red" />,
-                  autoClose: 3500,
-                  color: 'red',
-                  title: 'Maintaining',
-                  message: 'Auto refresh is off',
-                });
-          },
-          error(err) {
-            console.log(err);
-          },
-        });
-      }, AUTO_REFRESH_TIME * 1000);
-      return () => clearInterval(interval);
     }
   }, [loginState, isFirstAccess]);
 

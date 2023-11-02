@@ -32,7 +32,6 @@ export enum APIs {
   GET_SYSTEM_STATUS_SUMMARY = 'rsu/node/usage',
   GET_EVENT_STATUS_SUMMARY = 'event-management/events/summary',
   GET_EVENT_STATUS = '/event-management/events',
-  GET_NEW_EVENTS = 'event-management/new-events',
   DOWNLOAD = '/event-management/export/log',
   GET_STATUS_START_STOP = 'monitor-management/generator/status',
   CHANGE_GENERATOR = 'monitor-management/generator/toggle',
