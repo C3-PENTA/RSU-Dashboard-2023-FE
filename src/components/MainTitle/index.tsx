@@ -7,9 +7,7 @@ import { publish } from '@/helper/event';
 import { EVENT_CLICK_NAME, EdgeSystemConnection, Role } from '@/constants';
 import { LoginContext } from '@/App';
 import { getAutoRefresh, updateAutoRefresh } from '@/services/HeaderAPI';
-import { getNewEvents } from '@/services/ListEventAPI';
-import { CircleX } from 'tabler-icons-react';
-import { notifications } from '@mantine/notifications';
+
 import useGlobalStore from '@/stores';
 
 const useStyles = createStyles((theme) => ({
@@ -110,25 +108,25 @@ const MainTitle = () => {
     setNow(moment().local().format('YYYY.MM.DD HH:mm:ss'));
     getAutoRefresh().subscribe({
       next: ({ data }) => {
-        data &&
-          getNewEvents(1).subscribe({
-            next: ({ data }) => {
-              data.forEach((event, index) => {
-                setTimeout(() => {
-                  notifications.show({
-                    icon: <CircleX size="1rem" color="red" />,
-                    autoClose: 3000,
-                    color: 'red',
-                    title: 'Error: ' + event.nodeId,
-                    message: event.detail,
-                  });
-                }, 200 * index);
-              });
-            },
-            error(err) {
-              console.log(err);
-            },
-          });
+        // data &&
+        //   getNewEvents(1).subscribe({
+        //     next: ({ data }) => {
+        //       data.forEach((event, index) => {
+        //         setTimeout(() => {
+        //           notifications.show({
+        //             icon: <CircleX size="1rem" color="red" />,
+        //             autoClose: 3000,
+        //             color: 'red',
+        //             title: 'Error: ' + event.nodeId,
+        //             message: event.detail,
+        //           });
+        //         }, 200 * index);
+        //       });
+        //     },
+        //     error(err) {
+        //       console.log(err);
+        //     },
+        //   });
       },
       error(err) {
         console.log(err);

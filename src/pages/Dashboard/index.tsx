@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Map } from './components';
-import { IRsuData } from '@/interfaces/interfaceDashboard';
-import { getRSUInformation } from '@/services/DashboardAPI';
+import { IRsuData, ISummaryEventStatus } from '@/interfaces/interfaceDashboard';
+import { getEventStatusSummary, getRSUInformation } from '@/services/DashboardAPI';
 import { useLoading } from '@/LoadingContext';
 import { LoadingOverlay } from '@mantine/core';
 import { getAutoRefresh } from '@/services/HeaderAPI';

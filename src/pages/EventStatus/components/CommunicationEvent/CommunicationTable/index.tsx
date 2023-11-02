@@ -1,28 +1,14 @@
 import { Table, Checkbox, createStyles, rem, ScrollArea, Text } from '@mantine/core';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { BiUpArrow, BiDownArrow } from 'react-icons/bi';
 import moment from 'moment';
+import { ICommunicationEventData } from '..';
 
 interface CommunicationProps {
-  type: number;
   currentPage: number;
-  setListEvent: React.Dispatch<React.SetStateAction<string[]>>;
-  setOrder: (newValue: string) => void;
-  items: {
-    id: string;
-    createdAt: string;
-    nodeId: string;
-    nodeType: string;
-    srcNode: string;
-    destNode: string;
-    cooperationClass: string;
-    communicationClass: string;
-    sessionID: string;
-    method: string;
-    messageType: number;
-    detail: string;
-    status: number;
-  }[];
+  setListEvent: Dispatch<SetStateAction<string[]>>;
+  setOrder: Dispatch<SetStateAction<string>>;
+  eventData: ICommunicationEventData[];
 }
 
 const useStyles = createStyles((theme) => ({
@@ -63,32 +49,32 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const CommunicationTable = (props: CommunicationProps) => {
-  const { type, currentPage, setListEvent, setOrder, items } = props;
-  const data = items;
+  const { currentPage, setListEvent, setOrder, eventData } = props;
+  const data = eventData;
   const [tickAll, setTickAll] = useState(false);
   const [subCheckBoxes, setSubCheckBoxes] = useState(Array(data.length).fill(false));
   const [isToggled, setIsToggled] = useState(true);
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 
-  const handleToggle = async () => {
-    await setIsToggled(!isToggled);
+  const handleToggle = () => {
+    setIsToggled(!isToggled);
     if (isToggled) {
-      await setOrder('asc');
+      setOrder('asc');
     } else {
-      await setOrder('desc');
+      setOrder('desc');
     }
   };
 
-  const handleTickAll = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTickAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked;
     setTickAll(isChecked);
     setSubCheckBoxes(Array(data.length).fill(isChecked));
     if (isChecked) {
       const allIds = data.map((items) => items.id);
-      await setListEvent(allIds);
+      setListEvent(allIds);
     } else {
-      await setListEvent(['']);
+      setListEvent(['']);
     }
   };
 
@@ -112,7 +98,7 @@ const CommunicationTable = (props: CommunicationProps) => {
   useEffect(() => {
     setTickAll(false);
     setSubCheckBoxes(Array(data.length).fill(false));
-  }, [currentPage, type]);
+  }, [currentPage, eventData]);
 
   return (
     <ScrollArea.Autosize

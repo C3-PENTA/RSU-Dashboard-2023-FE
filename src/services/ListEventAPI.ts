@@ -1,6 +1,7 @@
 import { APIs } from '@/config/httpConfig/apis';
 import { http } from '@/helper/http';
-import { ResOverviewEvent, EventInfo, ListEventIds } from '@/interfaces/interfaceListEvent';
+import { ResOverviewEvent, EventInfo, ListEventIds, IEvent } from '@/interfaces/interfaceListEvent';
+import { AxiosResponse } from 'axios';
 import { from } from 'rxjs';
 
 export const getOverviewEvent = () => from(http.get<ResOverviewEvent>(APIs.GET_OVERVIEW_EVENT));
@@ -11,7 +12,7 @@ export const getEventStatus = (
   stDate?: string,
   edDate?: string,
   nodeID?: string,
-  isError?: string,
+  status?: number,
   drivingNegotiation?: string,
   messageType?: string,
   order?: string,
@@ -32,7 +33,7 @@ export const getEventStatus = (
         '&node-id=' +
         nodeID +
         '&status=' +
-        isError +
+        status +
         '&driving-negotiation-class=' +
         drivingNegotiation +
         '&message-type=' +
@@ -43,15 +44,17 @@ export const getEventStatus = (
     ),
   );
 
+export const getEvent = (options: IEvent) => {
+  const url = `${APIs.GET_EVENT_STATUS}?${new URLSearchParams(options)}`;
+  return from(http.get<AxiosResponse>(url));
+};
+
 export const downloadEvents = (payload: ListEventIds) =>
   from(
     http.post<ListEventIds>(APIs.DOWNLOAD, payload, {
       responseType: 'blob',
     }),
   );
-
-export const getNewEvents = (type: number) =>
-  from(http.get<any[]>(APIs.GET_NEW_EVENTS + '?type=' + type));
 
 export const getStatusStartStop = () => from(http.get(APIs.GET_STATUS_START_STOP));
 

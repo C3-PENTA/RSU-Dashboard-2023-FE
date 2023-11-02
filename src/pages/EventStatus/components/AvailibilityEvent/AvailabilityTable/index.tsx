@@ -1,27 +1,13 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Table, Checkbox, createStyles, rem, ScrollArea, Text } from '@mantine/core';
 import { BiUpArrow, BiDownArrow } from 'react-icons/bi';
 import moment from 'moment';
+import { IAvailabilityEventData } from '..';
 interface AvailabilityProps {
-  type: number;
   currentPage: number;
-  setListEvent: React.Dispatch<React.SetStateAction<string[]>>;
-  setOrder: (newValue: string) => void;
-  items: {
-    id: string;
-    createdAt: string;
-    nodeId: string;
-    nodeType: string;
-    cpuUsage: string;
-    cpuTemp: string;
-    ramUsage: string;
-    diskUsage: string;
-    networkSpeed: string;
-    networkUsage: string;
-    networkStatus: string;
-    detail: string;
-    status: number;
-  }[];
+  setListEvent: Dispatch<SetStateAction<string[]>>;
+  setOrder: Dispatch<SetStateAction<string>>;
+  eventData: IAvailabilityEventData[];
 }
 
 const useStyles = createStyles((theme) => ({
@@ -66,32 +52,32 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const AvailabilityTable = (props: AvailabilityProps) => {
-  const { type, currentPage, setListEvent, setOrder, items } = props;
-  const data = items;
+  const { currentPage, setOrder, eventData, setListEvent } = props;
+  const data = eventData;
   const [tickAll, setTickAll] = useState(false);
   const [subCheckBoxes, setSubCheckBoxes] = useState(Array(data.length).fill(false));
   const [isToggled, setIsToggled] = useState(true);
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 
-  const handleToggle = async () => {
-    await setIsToggled(!isToggled);
+  const handleToggle = () => {
+    setIsToggled(!isToggled);
     if (isToggled) {
-      await setOrder('asc');
+      setOrder('asc');
     } else {
-      await setOrder('desc');
+      setOrder('desc');
     }
   };
 
-  const handleTickAll = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTickAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked;
     setTickAll(isChecked);
     setSubCheckBoxes(Array(data.length).fill(isChecked));
     if (isChecked) {
       const allIds = data.map((items) => items.id);
-      await setListEvent(allIds);
+      setListEvent(allIds);
     } else {
-      await setListEvent([]);
+      setListEvent(['']);
     }
   };
 
@@ -115,7 +101,7 @@ const AvailabilityTable = (props: AvailabilityProps) => {
   useEffect(() => {
     setTickAll(false);
     setSubCheckBoxes(Array(data.length).fill(false));
-  }, [currentPage, type]);
+  }, [currentPage, eventData]);
 
   return (
     <ScrollArea.Autosize
