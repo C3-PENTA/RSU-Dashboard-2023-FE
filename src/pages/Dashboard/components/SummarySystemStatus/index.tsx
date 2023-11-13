@@ -6,6 +6,9 @@ import { getSystemStatusSummary } from '@/services/DashboardAPI';
 
 const colors = ['#51CF66', '#FF6B6B'];
 const getColor = (value: number, type: string) => {
+  if (value == null) {
+    return '#ded9d9';
+  }
   if (type === 'cpu') {
     return value < 70 ? colors[0] : colors[1];
   } else if (type === 'ram' || type === 'disk') {
@@ -167,8 +170,10 @@ const SummarySystemStatus = () => {
   const handleFilterClick = () => {
     setIsOpen(!isOpen);
   };
+
+  console.log(systemStatusData);
   useEffect(() => {
-    setSelectedNodeIds(systemStatusData.map((item) => item.nodeId));
+    setSelectedNodeIds(systemStatusData.map((item) => item.rsuID));
   }, [systemStatusData]);
   const handleChipClick = (nodeId: string) => {
     setSelectedNodeIds((prevSelectedNodeIds) => {
@@ -179,11 +184,11 @@ const SummarySystemStatus = () => {
       }
     });
   };
-  const filteredData = systemStatusData.filter((item) => selectedNodeIds.includes(item.nodeId));
+  const filteredData = systemStatusData.filter((item) => selectedNodeIds.includes(item.rsuID));
 
   const rows = filteredData.map((element) => (
-    <tr key={element.nodeId}>
-      <td className={cx(classes.cells)}>{element.nodeId}</td>
+    <tr key={element.rsuID}>
+      <td className={cx(classes.cells)}>{element.rsuID}</td>
       <td className={cx(classes.cells)}>
         <div
           style={{
@@ -191,7 +196,7 @@ const SummarySystemStatus = () => {
             height: 15,
             borderRadius: '50%',
             marginLeft: '6px',
-            backgroundColor: getColor(Number(element.cpuUsage), 'cpu'),
+            backgroundColor: getColor(element.cpuUsage, 'cpu'),
           }}
         />
       </td>
@@ -202,7 +207,7 @@ const SummarySystemStatus = () => {
             height: 15,
             borderRadius: '50%',
             marginLeft: '6px',
-            backgroundColor: getColor(Number(element.ramUsage), 'ram'),
+            backgroundColor: getColor(element.ramUsage, 'ram'),
           }}
         />
       </td>
@@ -213,7 +218,7 @@ const SummarySystemStatus = () => {
             height: 15,
             borderRadius: '50%',
             marginLeft: '6px',
-            backgroundColor: getColor(Number(element.diskUsage), 'disk'),
+            backgroundColor: getColor(element.diskUsage, 'disk'),
           }}
         />
       </td>
@@ -235,13 +240,13 @@ const SummarySystemStatus = () => {
       {systemStatusData.map((item) => {
         return (
           <Chip
-            key={item.nodeId}
+            key={item.rsuID}
             mb={'xs'}
             variant="light"
-            checked={selectedNodeIds.includes(item.nodeId)}
-            onClick={() => handleChipClick(item.nodeId)}
+            checked={selectedNodeIds.includes(item.rsuID)}
+            onClick={() => handleChipClick(item.rsuID)}
           >
-            {item.nodeId}
+            {item.rsuID}
           </Chip>
         );
       })}

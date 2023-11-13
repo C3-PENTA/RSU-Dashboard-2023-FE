@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import Chart, { ChartTypeRegistry } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { AvailEventData } from '@/pages/SystemStatus';
 import { PIE_CHART_COLOR } from '@/constants';
 import { Box, Group, Text, Title } from '@mantine/core';
+import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 
 interface PieChartDataProp {
-  data: AvailEventData | undefined;
+  data: ISummarySystemStatus | undefined;
 }
 
 const PieChart = (props: PieChartDataProp) => {

@@ -253,7 +253,7 @@ const Filter = (props: FilterProps) => {
       </Grid.Col>
       <Grid.Col span={2}>
         <MultiSelect
-          data={Object.entries(metaData.drivingNegotiationsClass).map(([label, value]) => ({
+          data={Object.entries(metaData.cooperationClass).map(([label, value]) => ({
             value: value.toString(),
             label,
           }))}

@@ -15,6 +15,7 @@ import { AvailEventData } from '../..';
 import { useEffect, useState } from 'react';
 import { Adjustments } from 'tabler-icons-react';
 import { NoData } from '@/components';
+import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -58,7 +59,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface NICDataProp {
-  data: AvailEventData[];
+  data: ISummarySystemStatus[];
   loadedAPI: boolean;
 }
 const NIC = (props: NICDataProp) => {
@@ -69,7 +70,7 @@ const NIC = (props: NICDataProp) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setSelectedNodeIds(data.map((item) => item.nodeId));
+    setSelectedNodeIds(data.map((item) => item.rsuID));
   }, [data]);
 
   const handleChipClick = (nodeId: string) => {
@@ -82,15 +83,15 @@ const NIC = (props: NICDataProp) => {
     });
   };
 
-  const filteredData = data.filter((item) => selectedNodeIds.includes(item.nodeId));
+  const filteredData = data.filter((item) => selectedNodeIds.includes(item.rsuID));
 
   const rows = filteredData.map((element) => (
-    <tr key={element.nodeId}>
-      <td className={cx(classes.cell)}>{element.nodeId}</td>
-      <td className={cx(classes.cell)}>{element.nodeId}</td>
-      <td className={cx(classes.cell)}>{element.networkStatus}</td>
-      <td className={cx(classes.cell)}>{element.networkSpeed}</td>
-      <td className={cx(classes.cell)}>{element.networkUsage}</td>
+    <tr key={element.rsuID}>
+      <td className={cx(classes.cell)}>{element.rsuID}</td>
+      <td className={cx(classes.cell)}>{element.rsuName}</td>
+      <td className={cx(classes.cell)}>{element.networkStatus ?? '-'}</td>
+      <td className={cx(classes.cell)}>{element.networkSpeed ?? '-'}</td>
+      <td className={cx(classes.cell)}>{element.networkUsage ?? '-'}</td>
     </tr>
   ));
 
@@ -107,13 +108,13 @@ const NIC = (props: NICDataProp) => {
       {data.map((item) => {
         return (
           <Chip
-            key={item.nodeId}
+            key={item.rsuID}
             mb={'xs'}
             variant="light"
-            checked={selectedNodeIds.includes(item.nodeId)}
-            onClick={() => handleChipClick(item.nodeId)}
+            checked={selectedNodeIds.includes(item.rsuID)}
+            onClick={() => handleChipClick(item.rsuID)}
           >
-            {item.nodeId}
+            {item.rsuID}
           </Chip>
         );
       })}

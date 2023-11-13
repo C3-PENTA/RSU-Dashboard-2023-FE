@@ -16,7 +16,7 @@ interface CommunicationButtonProps {
   setCurrentPageSize: Dispatch<SetStateAction<number>>;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   listEvent: string[];
-  setButtontype: Dispatch<SetStateAction<string | null>>;
+  setButtonType: Dispatch<SetStateAction<string | null>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -99,7 +99,7 @@ const CommunicationButton = (props: CommunicationButtonProps) => {
     setCurrentPageSize,
     setCurrentPage,
     listEvent,
-    setButtontype,
+    setButtonType,
     setIsOpen,
   } = props;
   const { classes, cx } = useStyles();
@@ -136,12 +136,12 @@ const CommunicationButton = (props: CommunicationButtonProps) => {
   };
 
   const handleClearData = () => {
-    setButtontype('clear');
+    setButtonType('clear');
     setIsOpen(true);
   };
 
   const handleImport = () => {
-    setButtontype('upload');
+    setButtonType('upload');
     setIsOpen(true);
   };
 

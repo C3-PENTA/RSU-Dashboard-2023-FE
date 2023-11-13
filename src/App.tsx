@@ -16,6 +16,8 @@ import { Path } from './config/path';
 import { LoadingProvider } from './LoadingContext';
 import { customTheme } from './config/mantineProvider';
 import { CircleX } from 'tabler-icons-react';
+import { getAutoRefresh } from './services/HeaderAPI';
+import { AUTO_REFRESH_TIME } from './constants';
 
 const initUser: userInfo = {
   username: '',
@@ -40,8 +42,9 @@ export const LoginContext = createContext({
 });
 
 function App() {
-  const { socket, setEdgeConnectionStatus } = useGlobalStore((state) => ({
+  const { socket, setEdgeConnectionStatus, isEdgeConnected } = useGlobalStore((state) => ({
     socket: state.socket,
+    isEdgeConnected: state.isEdgeConnected,
     setEdgeConnectionStatus: state.setEdgeConnectionStatus,
   }));
   const uID = useId();
@@ -62,9 +65,44 @@ function App() {
     if (loginState && isFirstAccess) {
       navigate('/');
       setIsFirstAccess(false);
+      getAutoRefresh().subscribe({
+        next: ({ data }) => {
+          !data &&
+            notifications.show({
+              icon: <CircleX size="1rem" color="red" />,
+              autoClose: 3500,
+              color: 'red',
+              title: 'Maintaining',
+              message: 'Auto refresh is off',
+            });
+        },
+        error(err) {
+          console.log(err);
+        },
+      });
     }
     if (!loginState) {
       navigate('/login');
+    } else {
+      const interval = setInterval(() => {
+        getAutoRefresh().subscribe({
+          next: ({ data }) => {
+            if (window.location.href.includes('event-status')) return;
+            !data &&
+              notifications.show({
+                icon: <CircleX size="1rem" color="red" />,
+                autoClose: 3500,
+                color: 'red',
+                title: 'Maintaining',
+                message: 'Auto refresh is off',
+              });
+          },
+          error(err) {
+            console.log(err);
+          },
+        });
+      }, AUTO_REFRESH_TIME * 1000);
+      return () => clearInterval(interval);
     }
   }, [loginState, isFirstAccess]);
 
@@ -94,7 +132,11 @@ function App() {
 
     loginState &&
       socket.on(SocketEvents.KEEP_ALIVE, (event: IEdgeConnectionStatus) => {
-        setEdgeConnectionStatus(event.status);
+        if (isEdgeConnected != event.status) {
+          console.log('Is Edge COnnected', isEdgeConnected);
+          console.log('Status', event.status);
+          setEdgeConnectionStatus(event.status);
+        }
       });
 
     return () => {

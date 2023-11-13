@@ -1,14 +1,14 @@
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Table, Checkbox, createStyles, rem, ScrollArea, Text } from '@mantine/core';
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { BiUpArrow, BiDownArrow } from 'react-icons/bi';
 import moment from 'moment';
-import { ICommunicationEventData } from '..';
+import { IDoorStatusData } from '..';
 
-interface CommunicationProps {
+interface AvailabilityProps {
   currentPage: number;
   setListEvent: Dispatch<SetStateAction<string[]>>;
   setOrder: Dispatch<SetStateAction<string>>;
-  eventData: ICommunicationEventData[];
+  eventData: IDoorStatusData[];
 }
 
 const useStyles = createStyles((theme) => ({
@@ -25,6 +25,10 @@ const useStyles = createStyles((theme) => ({
       right: 0,
       bottom: 0,
     },
+  },
+
+  headerCell: {
+    borderBottom: 'none',
   },
 
   text: {
@@ -48,8 +52,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const CommunicationTable = (props: CommunicationProps) => {
-  const { currentPage, setListEvent, setOrder, eventData } = props;
+const DoorStatusTable = (props: AvailabilityProps) => {
+  const { currentPage, setOrder, eventData, setListEvent } = props;
   const data = eventData;
   const [tickAll, setTickAll] = useState(false);
   const [subCheckBoxes, setSubCheckBoxes] = useState(Array(data.length).fill(false));
@@ -116,7 +120,7 @@ const CommunicationTable = (props: CommunicationProps) => {
           style={{ zIndex: 1 }}
         >
           <tr>
-            <th>
+            <th className={cx(classes.headerCell)}>
               <div style={{ display: 'flex' }}>
                 <Checkbox
                   checked={tickAll}
@@ -133,16 +137,7 @@ const CommunicationTable = (props: CommunicationProps) => {
                 </span>
               </div>
             </th>
-            <th>Cooperation Class</th>
-            <th>Session ID</th>
-            <th>Communication Class</th>
-            <th>메시지 종류</th>
-            <th>노드 ID</th>
-            <th>RSU 명칭</th>
-            <th>통신 방법</th>
-            <th>송신 노드</th>
-            <th>수신 노드</th>
-            <th>오류 상세</th>
+            <th className={cx(classes.headerCell)}>Door Status</th>
           </tr>
         </thead>
         <tbody>
@@ -154,21 +149,12 @@ const CommunicationTable = (props: CommunicationProps) => {
                   onChange={handleSubCheckBox(index)}
                   label={
                     <Text color="white">
-                      {moment(items.createdAt).local().format('YYYY-MM-DD HH:mm:ss')}
+                      {moment(items.timestamp).local().format('YYYY-MM-DD HH:mm:ss')}
                     </Text>
                   }
                 />
               </td>
-              <td className={cx(classes.cell)}>{items.cooperationClass ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.sessionID ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.communicationClass ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.messageType ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.nodeId ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.nodeType ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.communicationMethod ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.srcNode ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.destNode ?? '-'}</td>
-              <td className={cx(classes.cell)}>{items.detail ?? '-'}</td>
+              <td className={cx(classes.cell)}>{items.status}</td>
             </tr>
           ))}
         </tbody>
@@ -176,4 +162,4 @@ const CommunicationTable = (props: CommunicationProps) => {
     </ScrollArea.Autosize>
   );
 };
-export default CommunicationTable;
+export default DoorStatusTable;

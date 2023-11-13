@@ -106,32 +106,6 @@ const MainTitle = () => {
   const handleRefresh = () => {
     publish(EVENT_CLICK_NAME.REFRESH_BUTTON, {});
     setNow(moment().local().format('YYYY.MM.DD HH:mm:ss'));
-    getAutoRefresh().subscribe({
-      next: ({ data }) => {
-        // data &&
-        //   getNewEvents(1).subscribe({
-        //     next: ({ data }) => {
-        //       data.forEach((event, index) => {
-        //         setTimeout(() => {
-        //           notifications.show({
-        //             icon: <CircleX size="1rem" color="red" />,
-        //             autoClose: 3000,
-        //             color: 'red',
-        //             title: 'Error: ' + event.nodeId,
-        //             message: event.detail,
-        //           });
-        //         }, 200 * index);
-        //       });
-        //     },
-        //     error(err) {
-        //       console.log(err);
-        //     },
-        //   });
-      },
-      error(err) {
-        console.log(err);
-      },
-    });
   };
 
   const getAutoRefreshState = () => {

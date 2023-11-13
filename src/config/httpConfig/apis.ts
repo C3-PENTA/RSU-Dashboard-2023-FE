@@ -28,7 +28,7 @@ export enum APIs {
   GET_LIST_NODE_OF_RSU = '/rsu',
   GET_EVENT_BY_SRC_NODE = '/event-management/events/src-node/',
   GET_RSU_USAGE = '/event-management/rsu-usage',
-  GET_AVAIL_EVENT = '/event-management/latest-events',
+  GET_LATEST_EVENT = '/event-management/latest-events',
   GET_SYSTEM_STATUS_SUMMARY = 'rsu/node/usage',
   GET_EVENT_STATUS_SUMMARY = 'event-management/events/summary',
   GET_EVENT_STATUS = '/event-management/events',
@@ -41,4 +41,5 @@ export enum APIs {
   UPLOAD_EVENT = '/event-management/import',
   GET_NOTIFICATIONS = '/event-management/notifications',
   DEL_NOTIFICATIONS = '/users/ignore_event',
+  GET_DOOR_STATUS = '/event-management/door-status',
 }
