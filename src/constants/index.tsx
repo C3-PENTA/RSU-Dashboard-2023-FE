@@ -4,6 +4,7 @@ import Setting from '@/assets/icons/Setting';
 import Policy from '@/assets/icons/Policy';
 import System from '@/assets/icons/System';
 import Event from '@/assets/icons/Event';
+import Sensor from '@/assets/icons/Sensor';
 
 export const SERVER_STATUS = {
   NORMAL: 'normal',
@@ -41,6 +42,12 @@ export const MAIN_LINK = [
         icon: (status: boolean) => <Event status={status} />,
         label: '이벤트 현황',
         path: Path.EVENT,
+      },
+      {
+        id: 'door_status',
+        icon: (status: boolean) => <Sensor status={status} />,
+        label: 'SENSOR',
+        path: Path.SENSOR,
       },
     ],
   },

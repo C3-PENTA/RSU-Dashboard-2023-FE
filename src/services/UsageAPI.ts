@@ -1,5 +1,6 @@
 import { APIs } from '@/config/httpConfig/apis';
 import { http } from '@/helper/http';
+import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 import { LineChartData } from '@/interfaces/interfaceSystemStatus';
 import { from } from 'rxjs';
 
@@ -11,4 +12,4 @@ export const getNumberOfEachKindOfFile = (nodeId: string) =>
 export const getRSUUsage = (type: string, period: string) =>
   from(http.get<LineChartData[]>(APIs.GET_RSU_USAGE + '?type=' + type + '&period=' + period));
 export const getAvailEvent = (type: number) =>
-  from(http.get<any[]>(APIs.GET_AVAIL_EVENT + '?type=' + type));
+  from(http.get<ISummarySystemStatus[]>(APIs.GET_LATEST_EVENT + '?type=' + type));

@@ -19,14 +19,15 @@ export interface INodeData {
 }
 
 export interface ISummarySystemStatus {
-  eventId: string;
-  nodeId: string;
-  cpuUsage: string;
-  cpuTemp: string;
-  ramUsage: string;
-  diskUsage: string;
-  networkSpeed: string;
-  networkUsage: string;
+  nodeID: string;
+  rsuID: string;
+  rsuName: string;
+  cpuUsage: number;
+  cpuTemp: number;
+  ramUsage: number;
+  diskUsage: number;
+  networkSpeed: number;
+  networkUsage: number;
   networkStatus: number;
   detail: string;
   status: number;

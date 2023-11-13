@@ -1,13 +1,13 @@
 import { Title, Box, ScrollArea, Popover, Chip, Group, NavLink, Skeleton } from '@mantine/core';
 import ThermometerChart from './components/ThermometerChart';
 import './index.css';
-import { AvailEventData } from '../..';
 import { useEffect, useState } from 'react';
 import { Adjustments } from 'tabler-icons-react';
 import { NoData } from '@/components';
+import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 
 interface DetailDataProp {
-  data: AvailEventData[];
+  data: ISummarySystemStatus[];
   loadedAPI: boolean;
 }
 
@@ -17,7 +17,7 @@ const Detail = (props: DetailDataProp) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setSelectedNodeIds(data.map((item) => item.nodeId));
+    setSelectedNodeIds(data.map((item) => item.rsuID));
   }, [data]);
 
   const handleChipClick = (nodeId: string) => {
@@ -29,14 +29,14 @@ const Detail = (props: DetailDataProp) => {
       }
     });
   };
-  const filteredData = data.filter((item) => selectedNodeIds.includes(item.nodeId));
+  const filteredData = data.filter((item) => selectedNodeIds.includes(item.rsuID));
 
   const renderTemperatureList = (
     <ScrollArea h={280}>
       <Box>
         {filteredData.map((item) => {
           return (
-            <ThermometerChart key={item.nodeId} title={item.nodeId} temperature={item.cpuTemp} />
+            <ThermometerChart key={item.rsuID} title={item.rsuID} temperature={item.cpuTemp} />
           );
         })}
       </Box>
@@ -55,13 +55,13 @@ const Detail = (props: DetailDataProp) => {
       {data.map((item) => {
         return (
           <Chip
-            key={item.nodeId}
+            key={item.rsuID}
             mb={'xs'}
             variant="light"
-            checked={selectedNodeIds.includes(item.nodeId)}
-            onClick={() => handleChipClick(item.nodeId)}
+            checked={selectedNodeIds.includes(item.rsuID)}
+            onClick={() => handleChipClick(item.rsuID)}
           >
-            {item.nodeId}
+            {item.rsuID}
           </Chip>
         );
       })}

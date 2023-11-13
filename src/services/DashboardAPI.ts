@@ -10,7 +10,7 @@ import { from } from 'rxjs';
 
 export const getRSUInformation = () => from(http.get<IRsuNodes>(APIs.GET_LIST_NODE_OF_RSU));
 export const getSystemStatusSummary = () =>
-  from(http.get<ISummarySystemStatus[]>(APIs.GET_AVAIL_EVENT + '?type=1'));
+  from(http.get<ISummarySystemStatus[]>(APIs.GET_LATEST_EVENT + '?type=1'));
 export const getEventStatusSummary = (time: string) =>
   from(
     http.get<IResponseSummaryEventStatus>(APIs.GET_EVENT_STATUS_SUMMARY + `?time_range=${time}`),

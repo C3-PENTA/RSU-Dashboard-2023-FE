@@ -5,47 +5,61 @@ import { AxiosResponse } from 'axios';
 import { from } from 'rxjs';
 
 export const getOverviewEvent = () => from(http.get<ResOverviewEvent>(APIs.GET_OVERVIEW_EVENT));
-export const getEventStatus = (
-  type: number,
-  page: number,
-  limit: number,
-  stDate?: string,
-  edDate?: string,
-  nodeID?: string,
-  status?: number,
-  drivingNegotiation?: string,
-  messageType?: string,
-  order?: string,
-) =>
-  from(
-    http.get<EventInfo>(
-      APIs.GET_EVENT_STATUS +
-        '?type=' +
-        type +
-        '&page=' +
-        page +
-        '&limit=' +
-        limit +
-        '&start-date=' +
-        stDate +
-        '&end-date=' +
-        edDate +
-        '&node-id=' +
-        nodeID +
-        '&status=' +
-        status +
-        '&driving-negotiation-class=' +
-        drivingNegotiation +
-        '&message-type=' +
-        messageType +
-        '&sort=created_at' +
-        '&order=' +
-        order,
-    ),
-  );
+
+export const getEventStatus = (options: IEvent) => {
+  const commonParams =
+    '?type=' +
+    options.type +
+    '&page=' +
+    options.page +
+    '&limit=' +
+    options.limit +
+    '&start-date=' +
+    options.startDate +
+    '&end-date=' +
+    options.endDate +
+    '&node-id=' +
+    options.nodeID +
+    '&status=' +
+    options.status +
+    '&sort=created_at' +
+    '&order=' +
+    options.order;
+
+  if (options.type == 1) {
+    return from(http.get<EventInfo>(APIs.GET_EVENT_STATUS + commonParams));
+  }
+
+  if (options.type == 2) {
+    return from(
+      http.get<EventInfo>(
+        APIs.GET_EVENT_STATUS +
+          commonParams +
+          '&cooperation-class=' +
+          options.cooperationClass +
+          '&message-type=' +
+          options.messageType +
+          '&communication-class=' +
+          options.communicationClass +
+          '&communication-method=' +
+          options.communicationMethod +
+          '&session-id=' +
+          options.sessionID,
+      ),
+    );
+  }
+
+  return from(http.get<EventInfo>(APIs.GET_EVENT_STATUS + commonParams));
+};
+
+export const getSensorEvent = (options: IEvent) => {
+  const commonParams = '?page=' + options.page + '&limit=' + options.limit;
+
+  return from(http.get<EventInfo>(APIs.GET_DOOR_STATUS + commonParams));
+};
 
 export const getEvent = (options: IEvent) => {
-  const url = `${APIs.GET_EVENT_STATUS}?${new URLSearchParams(options)}`;
+  const url = `${APIs.GET_EVENT_STATUS}?${options}`;
   return from(http.get<AxiosResponse>(url));
 };
 

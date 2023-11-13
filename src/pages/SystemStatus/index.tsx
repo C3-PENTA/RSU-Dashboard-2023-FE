@@ -6,6 +6,7 @@ import { getAvailEvent } from '@/services/UsageAPI';
 import { useLoading } from '@/LoadingContext';
 import { AUTO_REFRESH_TIME, LINE_CHART_TITLE } from '@/constants';
 import { getAutoRefresh } from '@/services/HeaderAPI';
+import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 export interface DisksUsageData {
   name: string;
   disk_usage: number;
@@ -29,7 +30,7 @@ export interface AvailEventData {
 const SystemStatus = () => {
   const { setLoginState, currentUser } = useContext(LoginContext);
   const { loading, setLoading } = useLoading();
-  const [availEvent, setAvailEvent] = useState<AvailEventData[]>([]);
+  const [availEvent, setAvailEvent] = useState<ISummarySystemStatus[]>([]);
   const [loadedAPI, setLoadedAPI] = useState(false);
 
   useEffect(() => {

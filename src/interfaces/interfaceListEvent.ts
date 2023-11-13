@@ -19,8 +19,11 @@ export interface IEvent {
   startDate?: string;
   endDate?: string;
   nodeID?: string;
-  status?: number;
-  drivingNegotiation?: string;
+  status?: string;
+  cooperationClass?: string;
+  communicationClass?: string;
+  sessionID?: string;
+  communicationMethod?: string;
   messageType?: string;
   order?: string;
 }
@@ -115,11 +118,13 @@ export interface ListEventIds {
 export interface MetaData {
   nodeList: { [nodeName: string]: string };
   eventStatus: { [event: string]: number };
-  drivingNegotiationsClass: { [negotiation: string]: number };
+  cooperationClass: { [type: string]: string };
+  sessionID: { [type: string]: string };
+  communicationClass: { [type: string]: string };
+  communicationMethod: { [method: string]: string };
+  messageType: { [type: string]: string };
   networkStatus: { [status: string]: number };
-  communicationMethod: { [method: string]: number };
-  messageType: { [type: string]: number };
-  nodeType: { [type: string]: number };
+  nodeType: { [type: string]: string };
 }
 
 export interface INotificationEventSocket {

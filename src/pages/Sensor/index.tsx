@@ -5,9 +5,8 @@ import { useLoading } from '@/LoadingContext';
 import { getAutoRefresh } from '@/services/HeaderAPI';
 import { Box, createStyles, Group, Tabs, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { CommunicationEvent } from './components';
-import AvailabilityEvent from './components/AvailabilityEvent';
 import { getMetaData } from '@/services/ListEventAPI';
+import { DoorStatus } from './components';
 
 const useStyles = createStyles((theme) => ({
   button: {
@@ -137,22 +136,15 @@ const initMetaData: MetaData = {
   },
 };
 
-const EventStatus = () => {
-  const [metaData, setMetaData] = useState<MetaData>(initMetaData);
+const Sensor = () => {
   const { classes, cx } = useStyles();
-  const [availabilityReload, setAvailabilityReload] = useState<boolean>(false);
-  const [communicationReload, setCommunicationReload] = useState<boolean>(false);
-  const [type, setType] = useState<string>('Availability');
-
-  useEffect(() => {
-    getMetaDataEvent();
-  }, [availabilityReload, communicationReload]);
+  const [doorStatusReload, setDoorStatusReload] = useState<boolean>(false);
+  // const [communicationReload, setCommunicationReload] = useState<boolean>(false);
+  const [type, setType] = useState<string>('DoorStatus');
 
   const eventRefresh = () => {
-    if (type === 'Availability') {
-      setAvailabilityReload(!availabilityReload);
-    } else {
-      setCommunicationReload(!communicationReload);
+    if (type === 'DoorStatus') {
+      setDoorStatusReload(!doorStatusReload);
     }
   };
 
@@ -161,58 +153,45 @@ const EventStatus = () => {
     return () => {
       unsubscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
     };
-  }, [type, availabilityReload, communicationReload]);
+  }, [type, doorStatusReload]);
 
   const handleTypeChange = (value: string) => {
-    if (value === 'Availability') {
-      setAvailabilityReload(!availabilityReload);
-      setType('Availability');
-    } else {
-      setCommunicationReload(!communicationReload);
-      setType('Communication');
+    if (value === 'DoorStatus') {
+      setDoorStatusReload(!doorStatusReload);
+      setType('DoorStatus');
     }
-  };
-
-  const getMetaDataEvent = () => {
-    getMetaData().subscribe({
-      next: (data: any) => {
-        setMetaData(data.data);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    // else {
+    //   setCommunicationReload(!communicationReload);
+    //   setType('Communication');
+    // }
   };
 
   return (
     <Box p={'16px'} sx={{ height: 'auto', borderRadius: 8 }}>
-      <Tabs defaultValue="Availability" pt={'16px'}>
+      <Tabs defaultValue="DoorStatus" pt={'16px'}>
         <Tabs.List position="apart" sx={{ borderBottom: 'none' }}>
           <Group position="left" spacing={0}>
             <Tabs.Tab
-              value="Availability"
-              onClick={() => handleTypeChange('Availability')}
+              value="DoorStatus"
+              onClick={() => handleTypeChange('DoorStatus')}
               className={cx(classes.tab)}
             >
-              <Text>가용성</Text>
+              <Text>Door Status</Text>
             </Tabs.Tab>
-            <Tabs.Tab
+            {/* <Tabs.Tab
               value="Communication"
               onClick={() => handleTypeChange('Communication')}
               className={cx(classes.tab)}
             >
               <Text>통신</Text>
-            </Tabs.Tab>
+            </Tabs.Tab> */}
           </Group>
         </Tabs.List>
-        <Tabs.Panel value="Availability">
-          <AvailabilityEvent metaData={metaData} reloadFlag={availabilityReload} />
-        </Tabs.Panel>
-        <Tabs.Panel value="Communication" pt={'xs'}>
-          <CommunicationEvent metaData={metaData} reloadFlag={communicationReload} />
+        <Tabs.Panel value="DoorStatus">
+          <DoorStatus reloadFlag={doorStatusReload} />
         </Tabs.Panel>
       </Tabs>
     </Box>
   );
 };
-export default EventStatus;
+export default Sensor;

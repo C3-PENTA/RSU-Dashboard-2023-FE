@@ -2,7 +2,7 @@ import { IEvent, MetaData } from '@/interfaces/interfaceListEvent';
 import CommunicationPanel from './Panel';
 import { useEffect, useState } from 'react';
 import CommunicationButton from './Button';
-import { deleteEvent, getEvent, uploadEvent } from '@/services/ListEventAPI';
+import { deleteEvent, getEvent, getEventStatus, uploadEvent } from '@/services/ListEventAPI';
 import { AxiosResponse } from 'axios';
 import { useLoading } from '@/LoadingContext';
 import CommunicationTable from './CommunicationTable';
@@ -28,7 +28,7 @@ export interface ICommunicationEventData {
   detail: string;
   id: string;
   messageType: string;
-  method: string;
+  communicationMethod: string;
   nodeId: string;
   nodeType: string;
   sessionID: string;
@@ -44,7 +44,7 @@ const initCommunicationEventData = [
     detail: '',
     id: '',
     messageType: '',
-    method: '',
+    communicationMethod: '',
     nodeId: '',
     nodeType: '',
     sessionID: '',
@@ -59,8 +59,11 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [nodeId, setNodeID] = useState<string>('');
-  const [status, setStatus] = useState<number>(1);
-  const [drivingNegotiationsClass, setDrivingNegotiationsClass] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
+  const [cooperationClass, setCooperationClass] = useState<string>('');
+  const [sessionID, setSessionID] = useState<string>('');
+  const [communicationClass, setCommunicationClass] = useState<string>('');
+  const [communicationMethod, setCommunicationMethod] = useState<string>('');
   const [messageType, setMessageType] = useState<string>('');
   const [order, setOrder] = useState<string>('desc');
   const [eventData, setEventData] = useState<ICommunicationEventData[]>(initCommunicationEventData);
@@ -82,7 +85,7 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
     setLoading(true);
     setApiLoaded(false);
 
-    const param: IEvent = {
+    const params: IEvent = {
       type: 2,
       page: currentPage,
       limit: currentPageSize,
@@ -90,11 +93,15 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
       endDate: endDate ? endDate.toISOString() : '',
       nodeID: nodeId ? nodeId : '',
       status: status,
-      drivingNegotiation: drivingNegotiationsClass,
+      cooperationClass: cooperationClass,
+      communicationClass: communicationClass,
+      communicationMethod: communicationMethod,
+      sessionID: sessionID,
       messageType: messageType,
       order: order,
     };
-    getEvent(param).subscribe({
+
+    getEventStatus(params).subscribe({
       next: (response: AxiosResponse) => {
         setEventData(response?.data?.events);
         setTotalPages(response?.data?.meta?.totalPages);
@@ -245,7 +252,10 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
         setNodeId={setNodeID}
         setStatus={setStatus}
         metaData={metaData}
-        setDrivingNeotiationsClass={setDrivingNegotiationsClass}
+        setCooperationClass={setCooperationClass}
+        setSessionID={setSessionID}
+        setCommunicationClass={setCommunicationClass}
+        setCommunicationMethod={setCommunicationMethod}
         setMessageType={setMessageType}
         removeFlag={removeFlag}
       />
@@ -257,7 +267,7 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
         setSearchFlag={setSearchFlag}
         setCurrentPage={setCurrentPage}
         listEvent={listEvent}
-        setButtontype={setButtonType}
+        setButtonType={setButtonType}
         setIsOpen={setIsOpen}
       />
       <CommunicationTable

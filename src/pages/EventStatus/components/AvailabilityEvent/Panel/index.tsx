@@ -10,7 +10,7 @@ interface AvailabilityPanelProps {
   setStartDate: Dispatch<SetStateAction<Date | null>>;
   setEndDate: Dispatch<SetStateAction<Date | null>>;
   setNodeId: Dispatch<SetStateAction<string>>;
-  setStatus: Dispatch<SetStateAction<number>>;
+  setStatus: Dispatch<SetStateAction<string>>;
   metaData: MetaData;
   removeFlag: boolean;
 }
@@ -48,17 +48,17 @@ const AvailabilityPanel = (props: AvailabilityPanelProps) => {
   };
 
   const handleNodeID = (value: string[]) => {
-    setNodeId(value.join('&nodeID='));
+    setNodeId(value.join('&node-id='));
     setMultiSelectValue(value);
   };
 
   const handleIsError = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setStatus(2);
+      setStatus('2');
       setChecked(true);
       return;
     }
-    setStatus(1);
+    setStatus('');
     setChecked(false);
   };
 
@@ -70,7 +70,7 @@ const AvailabilityPanel = (props: AvailabilityPanelProps) => {
     setMultiSelectValue(['']);
     setChecked(false);
     setNodeId('');
-    setStatus(1);
+    setStatus('');
   }, [removeFlag]);
 
   return (

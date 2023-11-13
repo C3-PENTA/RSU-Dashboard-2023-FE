@@ -10,9 +10,12 @@ interface CommunicationPanelProps {
   setStartDate: Dispatch<SetStateAction<Date | null>>;
   setEndDate: Dispatch<SetStateAction<Date | null>>;
   setNodeId: Dispatch<SetStateAction<string>>;
-  setStatus: Dispatch<SetStateAction<number>>;
+  setStatus: Dispatch<SetStateAction<string>>;
   metaData: MetaData;
-  setDrivingNeotiationsClass: Dispatch<SetStateAction<string>>;
+  setCooperationClass: Dispatch<SetStateAction<string>>;
+  setSessionID: Dispatch<SetStateAction<string>>;
+  setCommunicationMethod: Dispatch<SetStateAction<string>>;
+  setCommunicationClass: Dispatch<SetStateAction<string>>;
   setMessageType: Dispatch<SetStateAction<string>>;
   removeFlag: boolean;
 }
@@ -26,18 +29,25 @@ const CommunicationPanel = (props: CommunicationPanelProps) => {
     setNodeId,
     setStatus,
     metaData,
-    setDrivingNeotiationsClass,
+    setCooperationClass,
+    setSessionID,
     setMessageType,
+    setCommunicationMethod,
+    setCommunicationClass,
     removeFlag,
   } = props;
+
   let now: Date | string = new Date();
   now = now.toISOString().slice(0, 10);
   const [minDate, setMinDate] = useState(new Date('1000-01-01'));
   const [maxDate, setMaxDate] = useState(new Date(now));
   const [checked, setChecked] = useState<boolean>(false);
-  const [multiSelectValue, setMultiSelectValue] = useState<string[]>(['']);
-  const [drivingValue, setDrivingValue] = useState<string[]>(['']);
-  const [messageValue, setMessageValue] = useState(['']);
+  const [selectedNode, setSelectedNode] = useState<string[]>(['']);
+  const [selectedCooperationClass, setSelectedCooperationClass] = useState<string[]>(['']);
+  const [selectedMessageType, setSelectedMessageType] = useState<string[]>(['']);
+  const [selectedSessionID, setSelectedSessionID] = useState<string[]>(['']);
+  const [selectedCommunicationClass, setSelectedCommunicationClass] = useState<string[]>(['']);
+  const [selectedCommunicationMethod, setSelectedCommunicationMethod] = useState<string[]>(['']);
 
   const handleMinDate = (value: Date | null) => {
     if (value) {
@@ -54,28 +64,43 @@ const CommunicationPanel = (props: CommunicationPanelProps) => {
   };
 
   const handleNodeID = (value: string[]) => {
-    setNodeId(value.join('&nodeID='));
-    setMultiSelectValue(value);
+    setNodeId(value.join('&node-id='));
+    setSelectedNode(value);
   };
 
   const handleIsError = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setStatus(2);
+      setStatus('2');
       setChecked(true);
       return;
     }
-    setStatus(1);
+    setStatus('');
     setChecked(false);
   };
 
-  const handleDrivingNegotiationClass = (value: string[]) => {
-    setDrivingNeotiationsClass(value.join('&drivingNegotiation='));
-    setDrivingValue(value);
+  const handleCooperationClass = (value: string[]) => {
+    setCooperationClass(value.join('&cooperation-class='));
+    setSelectedCooperationClass(value);
   };
 
   const handleMessageType = (value: string[]) => {
-    setMessageType(value.join('&memessageType'));
-    setMessageValue(value);
+    setMessageType(value.join('&message-type='));
+    setSelectedMessageType(value);
+  };
+
+  const handleCommunicationClass = (value: string[]) => {
+    setCommunicationClass(value.join('&communication-class='));
+    setSelectedCommunicationClass(value);
+  };
+
+  const handleCommunicationMethod = (value: string[]) => {
+    setCommunicationMethod(value.join('&communication-method='));
+    setSelectedCommunicationMethod(value);
+  };
+
+  const handleSessionID = (value: string[]) => {
+    setSessionID(value.join('&session-id='));
+    setSelectedSessionID(value);
   };
 
   useEffect(() => {
@@ -83,12 +108,15 @@ const CommunicationPanel = (props: CommunicationPanelProps) => {
     setMinDate(new Date('1000-01-01'));
     setEndDate(null);
     setMaxDate(new Date(now));
-    setMultiSelectValue(['']);
     setChecked(false);
     setNodeId('');
-    setStatus(1);
-    setMessageValue(['']);
-    setDrivingValue(['']);
+    setStatus('');
+    setSelectedNode(['']);
+    setSelectedMessageType(['']);
+    setSelectedCommunicationClass(['']);
+    setSelectedCommunicationMethod(['']);
+    setSelectedCooperationClass(['']);
+    setSelectedSessionID(['']);
   }, [removeFlag]);
 
   return (
@@ -159,7 +187,7 @@ const CommunicationPanel = (props: CommunicationPanelProps) => {
           placeholder={EVENT_PAGE_QUOTE.CHOOSE_NODE_ID_KOR}
           radius="md"
           searchable
-          value={multiSelectValue}
+          value={selectedNode}
           onChange={handleNodeID}
         />
       </Grid.Col>
@@ -171,15 +199,53 @@ const CommunicationPanel = (props: CommunicationPanelProps) => {
       </Grid.Col>
       <Grid.Col span={2}>
         <MultiSelect
-          data={Object.entries(metaData.drivingNegotiationsClass).map(([label, value]) => ({
+          data={Object.entries(metaData.cooperationClass).map(([label, value]) => ({
             value: value.toString(),
             label,
           }))}
-          placeholder="주행을 선택하십시오"
+          placeholder="Cooperation Class"
           radius="md"
           searchable
-          value={drivingValue}
-          onChange={handleDrivingNegotiationClass}
+          value={selectedCooperationClass}
+          onChange={handleCooperationClass}
+        />
+      </Grid.Col>
+      <Grid.Col span={1}></Grid.Col>
+      <Grid.Col span={1} style={{ padding: '18px 0px' }}>
+        <Text fw={500} fz={'14px'} lts={'0.6px'} lh={'16px'}>
+          Session ID:
+        </Text>
+      </Grid.Col>
+      <Grid.Col span={2}>
+        <MultiSelect
+          data={Object.entries(metaData.sessionID).map(([label, value]) => ({
+            value: value.toString(),
+            label,
+          }))}
+          placeholder="Session ID"
+          radius="md"
+          searchable
+          value={selectedSessionID}
+          onChange={handleSessionID}
+        />
+      </Grid.Col>
+      <Grid.Col span={1}></Grid.Col>
+      <Grid.Col span={1} style={{ padding: '18px 0px' }}>
+        <Text fw={500} fz={'14px'} lts={'0.6px'} lh={'16px'}>
+          Communication Class:
+        </Text>
+      </Grid.Col>
+      <Grid.Col span={2}>
+        <MultiSelect
+          data={Object.entries(metaData.communicationClass).map(([label, value]) => ({
+            value: value.toString(),
+            label,
+          }))}
+          placeholder="Communication Class"
+          radius="md"
+          searchable
+          value={selectedCommunicationClass}
+          onChange={handleCommunicationClass}
         />
       </Grid.Col>
       <Grid.Col span={1}></Grid.Col>
@@ -197,8 +263,27 @@ const CommunicationPanel = (props: CommunicationPanelProps) => {
           placeholder={EVENT_PAGE_QUOTE.CHOOSE_MESSAGE_TYPE_KOR}
           radius="md"
           searchable
-          value={messageValue}
+          value={selectedMessageType}
           onChange={handleMessageType}
+        />
+      </Grid.Col>
+      <Grid.Col span={1}></Grid.Col>
+      <Grid.Col span={1} style={{ padding: '18px 0px' }}>
+        <Text fw={500} fz={'14px'} lts={'0.6px'} lh={'16px'}>
+          통신 방법:
+        </Text>
+      </Grid.Col>
+      <Grid.Col span={2}>
+        <MultiSelect
+          data={Object.entries(metaData.communicationMethod).map(([label, value]) => ({
+            value: value.toString(),
+            label,
+          }))}
+          placeholder="통신 방법"
+          radius="md"
+          searchable
+          value={selectedCommunicationMethod}
+          onChange={handleCommunicationMethod}
         />
       </Grid.Col>
     </Grid>

@@ -8,6 +8,7 @@ const Policy = lazy(() => import('../pages/Policy'));
 const SystemStatus = lazy(() => import('../pages/SystemStatus'));
 const EventStatus = lazy(() => import('../pages/EventStatus'));
 const EnvironmentSetting = lazy(() => import('../pages/EnvironmentSetting'));
+const DoorStatus = lazy(() => import('../pages/Sensor'));
 
 const routesConfig: IRoute[] = [
   {
@@ -29,6 +30,10 @@ const routesConfig: IRoute[] = [
   {
     path: Path.EVENT,
     component: EventStatus,
+  },
+  {
+    path: Path.SENSOR,
+    component: DoorStatus,
   },
   {
     path: Path.ENV,

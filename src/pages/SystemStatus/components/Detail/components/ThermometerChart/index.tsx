@@ -20,14 +20,16 @@ const useStyles = createStyles((theme) => ({
 
 const ThermometerChart = (props: ThermometerProps) => {
   const { title, temperature } = props;
-  const [fahrenheit, setFahrenheit] = useState(0);
+  const [fahrenheit, setFahrenheit] = useState<number | null>(0);
   const [color, setColor] = useState('rgba(72, 187, 120, 1)');
   const { classes, cx } = useStyles();
 
   useEffect(() => {
-    const fahrenheitValue = Math.round(temperature * 1.8 + 32);
+    const fahrenheitValue = temperature != null ? Math.round(temperature * 1.8 + 32) : null;
     setFahrenheit(fahrenheitValue);
-    if (temperature > 70) {
+    if (temperature == null) {
+      setColor('rgba(192,192,192)');
+    } else if (temperature > 70) {
       setColor('rgba(245, 101, 101, 1)');
     } else {
       setColor('rgba(72, 187, 120, 1)');
@@ -55,7 +57,7 @@ const ThermometerChart = (props: ThermometerProps) => {
         </div>
         <div className={cx(classes.text)}>
           {' '}
-          {temperature}&deg;C {fahrenheit}&deg;F
+          {temperature ?? '-'}&deg;C {fahrenheit ?? '-'}&deg;F
         </div>
       </div>
     </>

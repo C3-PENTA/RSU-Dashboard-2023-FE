@@ -36,10 +36,12 @@ Chart.register(zoomPlugin);
 const LineChartSystem = (props: LineChartSystemProps) => {
   const { listStateRSU, title, type, data } = props;
   const isEmpty = data.length <= 0;
-  const generateColorList = (count: number) => {
-    const colors = [];
+
+  const generateColorList = (rsuList: StateInfo[]) => {
+    const colors: Record<string, string> = {};
     const baseLightness = 50;
     const redHueThreshold = 30;
+    const count = rsuList.length;
 
     for (let i = 0; i < count; i++) {
       let hue = (i * (360 / count)) % 360;
@@ -50,7 +52,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
       const saturation = 70;
       const lightness = baseLightness + i * (50 / count);
       const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      colors.push(color);
+      colors[rsuList[i].id] = color;
     }
 
     return colors;
@@ -65,7 +67,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
     };
   }, []);
 
-  const colorList = generateColorList(data.length);
+  const colorList = generateColorList(listStateRSU);
 
   const generateLabels = (data: LineChartData[] | undefined, type: string): string[] => {
     const labels: string[] = [];
@@ -96,6 +98,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
     return labels;
   };
   const labels: string[] = generateLabels(data, type);
+  console.log('labels', labels);
   const convertToDataset = (data: LineChartData[]): Dataset[] => {
     const referenceLine: Dataset = {
       label: '정상치 기준선',
@@ -108,6 +111,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
       tension: 0.1,
       showLine: true,
     };
+
     const datasets: Dataset[] = data.map((item, index) => {
       const isShow: boolean | undefined = listStateRSU.find(
         (itemState) => itemState.id === item.id,
@@ -118,8 +122,8 @@ const LineChartSystem = (props: LineChartSystemProps) => {
         labels,
         fill: false,
         pointStyle: 'circle',
-        pointBackgroundColor: colorList[index],
-        borderColor: colorList[index],
+        pointBackgroundColor: colorList[item.id],
+        borderColor: colorList[item.id],
         borderDash: [],
         tension: 0.1,
         showLine: isShow,
@@ -129,6 +133,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
     datasets.unshift(referenceLine);
     return datasets;
   };
+
   const dataset = convertToDataset(data);
   const renderDividers = (
     <Group position="center" mt={'lg'}>
@@ -138,7 +143,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
             <Divider
               key={index}
               sx={{ width: '15%' }}
-              color={colorList[index]}
+              color={colorList[item.id]}
               labelPosition="right"
               label={item.id}
               size={3}
@@ -176,6 +181,7 @@ const LineChartSystem = (props: LineChartSystemProps) => {
       chartInstance.zoom(3 / 10);
     }
   };
+
   useEffect(() => {
     function ctrlZoom(
       event: WheelEvent,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import AvailabilityPanel from './Panel';
 import { IEvent, MetaData } from '@/interfaces/interfaceListEvent';
-import { deleteEvent, getEvent, uploadEvent } from '@/services/ListEventAPI';
+import { deleteEvent, getEvent, getEventStatus, uploadEvent } from '@/services/ListEventAPI';
 import { AxiosResponse } from 'axios';
 import AvailabilityTable from './AvailabilityTable';
 import AvailabilityButton from './Button';
@@ -59,7 +59,7 @@ const AvailabilityEvent = (props: AvailabilityEventProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [nodeId, setNodeID] = useState<string>('');
-  const [status, setStatus] = useState<number>(1);
+  const [status, setStatus] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(20);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -78,6 +78,7 @@ const AvailabilityEvent = (props: AvailabilityEventProps) => {
   const getEventAPI = () => {
     setLoading(true);
     setApiLoaded(false);
+
     const param: IEvent = {
       type: 1,
       page: currentPage,
@@ -85,12 +86,11 @@ const AvailabilityEvent = (props: AvailabilityEventProps) => {
       startDate: startDate ? startDate.toISOString() : '',
       endDate: endDate ? endDate.toISOString() : '',
       nodeID: nodeId ? nodeId : '',
-      status: status,
-      drivingNegotiation: '',
-      messageType: '',
+      status: status ? status : '',
       order: order,
     };
-    getEvent(param).subscribe({
+
+    getEventStatus(param).subscribe({
       next: (response: AxiosResponse) => {
         setEventData(response?.data?.events);
         setTotalPages(response?.data?.meta?.totalPages);

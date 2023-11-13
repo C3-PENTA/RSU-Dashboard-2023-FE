@@ -15,13 +15,13 @@ import {
 } from '@mantine/core';
 import { Adjustments } from 'tabler-icons-react';
 import AvailableDisk from './components/AvailableDisk';
-import { AvailEventData } from '../..';
 import PieChart from './components/PieChart';
 import { NoData } from '@/components';
+import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 
 interface DisksUsageDataProp {
   title: string;
-  data: AvailEventData[];
+  data: ISummarySystemStatus[];
   loadedAPI: boolean;
 }
 
@@ -34,7 +34,7 @@ function Disk(props: DisksUsageDataProp) {
     setIsOpen(!isOpen);
   };
   useEffect(() => {
-    setSelectedNodeIds(data.map((item) => item.nodeId));
+    setSelectedNodeIds(data.map((item) => item.rsuID));
   }, [data]);
 
   const handleChipClick = (nodeId: string) => {
@@ -60,35 +60,35 @@ function Disk(props: DisksUsageDataProp) {
       {data.map((item) => {
         return (
           <Chip
-            key={item.nodeId}
+            key={item.rsuID}
             mb={'xs'}
             variant="light"
-            checked={selectedNodeIds.includes(item.nodeId)}
-            onClick={() => handleChipClick(item.nodeId)}
+            checked={selectedNodeIds.includes(item.rsuID)}
+            onClick={() => handleChipClick(item.rsuID)}
           >
-            {item.nodeId}
+            {item.rsuID}
           </Chip>
         );
       })}
     </Popover.Dropdown>
   );
 
-  const filteredData = data.filter((item) => selectedNodeIds.includes(item.nodeId));
+  const filteredData = data.filter((item) => selectedNodeIds.includes(item.rsuID));
 
   const renderListButton = (
     <SimpleGrid cols={1}>
       {filteredData.map((item) => {
         return (
           <Button
-            key={item.nodeId}
-            variant={nodeIdPieChart === item.nodeId ? 'filled' : 'default'}
+            key={item.rsuID}
+            variant={nodeIdPieChart === item.rsuID ? 'filled' : 'default'}
             size={'xs'}
             onClick={() => {
-              setNodeIdPieChart((preState) => (preState === item.nodeId ? '' : item.nodeId));
+              setNodeIdPieChart((preState) => (preState === item.rsuID ? '' : item.rsuID));
             }}
           >
             <Text size={'xs'} weight={650}>
-              {item.nodeId}
+              {item.rsuID}
             </Text>
           </Button>
         );
@@ -98,20 +98,20 @@ function Disk(props: DisksUsageDataProp) {
 
   const renderDiskList = (
     <Group position="center" spacing={0}>
-      {filteredData.map((item: AvailEventData) => {
+      {filteredData.map((item: ISummarySystemStatus) => {
         return (
-          <Grid key={item.nodeId} columns={13} align="center" sx={{ paddingBottom: 0 }}>
+          <Grid key={item.rsuID} columns={13} align="center" sx={{ paddingBottom: 0 }}>
             <Grid.Col span={2} sx={{ paddingBottom: 0 }}>
               <Button
-                variant={nodeIdPieChart === item.nodeId ? 'filled' : 'default'}
+                variant={nodeIdPieChart === item.rsuID ? 'filled' : 'default'}
                 size={'xs'}
                 onClick={() => {
-                  setNodeIdPieChart((preState) => (preState === item.nodeId ? '' : item.nodeId));
+                  setNodeIdPieChart((preState) => (preState === item.rsuID ? '' : item.rsuID));
                 }}
                 compact
               >
                 <Text size={'xs'} weight={650}>
-                  {item.nodeId}
+                  {item.rsuID}
                 </Text>
               </Button>
             </Grid.Col>
@@ -185,7 +185,7 @@ function Disk(props: DisksUsageDataProp) {
           <ScrollArea h={300} type="auto" scrollbarSize={6}>
             {renderListButton}
           </ScrollArea>
-          <PieChart data={data.find((item) => item.nodeId === nodeIdPieChart)} />
+          <PieChart data={data.find((item) => item.rsuID === nodeIdPieChart)} />
         </Group>
       )}
       {data.length <= 5 && nodeIdPieChart === '' && renderDiskList}
