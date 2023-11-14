@@ -7,6 +7,8 @@ import { useLoading } from '@/LoadingContext';
 import { AUTO_REFRESH_TIME, LINE_CHART_TITLE } from '@/constants';
 import { getAutoRefresh } from '@/services/HeaderAPI';
 import { ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
+import { notifications } from '@mantine/notifications';
+import { CircleX } from 'tabler-icons-react';
 export interface DisksUsageData {
   name: string;
   disk_usage: number;
@@ -39,6 +41,14 @@ const SystemStatus = () => {
       getAutoRefresh().subscribe({
         next: ({ data }) => {
           data && getEvent();
+          !data &&
+            notifications.show({
+              icon: <CircleX size="1rem" color="red" />,
+              autoClose: 3500,
+              color: 'red',
+              title: 'Maintaining',
+              message: 'Auto refresh is off',
+            });
         },
         error(err) {
           console.log(err);

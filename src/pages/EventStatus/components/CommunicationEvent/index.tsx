@@ -2,22 +2,30 @@ import { IEvent, MetaData } from '@/interfaces/interfaceListEvent';
 import CommunicationPanel from './Panel';
 import { useEffect, useState } from 'react';
 import CommunicationButton from './Button';
-import { deleteEvent, getEvent, getEventStatus, uploadEvent } from '@/services/ListEventAPI';
+import {
+  deleteEvent,
+  getEvent,
+  getEventStatus,
+  getMetaData,
+  uploadEvent,
+} from '@/services/ListEventAPI';
 import { AxiosResponse } from 'axios';
 import { useLoading } from '@/LoadingContext';
 import CommunicationTable from './CommunicationTable';
 import Modal from '../Modal';
-import { EVENT_PAGE_QUOTE } from '@/constants';
+import { AUTO_REFRESH_TIME, EVENT_PAGE_QUOTE } from '@/constants';
 import { notifications } from '@mantine/notifications';
 import { CircleCheck, CircleX } from 'tabler-icons-react';
 import Pagination from '../Pagination';
 import { NoData } from '@/components';
 import { LoadingOverlay } from '@mantine/core';
 import CustomeLoader from '@/assets/icons/CustomeLoader';
+import { forkJoin } from 'rxjs';
+import { getAutoRefresh } from '@/services/HeaderAPI';
 
 interface CommunicationEventProps {
-  metaData: MetaData;
-  reloadFlag: boolean;
+  // metaData: MetaData;
+  reloadFlag: number;
 }
 
 export interface ICommunicationEventData {
@@ -52,10 +60,40 @@ const initCommunicationEventData = [
   },
 ];
 
-const CommunicationEvent = (props: CommunicationEventProps) => {
-  const { metaData, reloadFlag } = props;
-  const { loading, setLoading } = useLoading();
+const initMetaData: MetaData = {
+  nodeList: {
+    nodeID: 'id',
+  },
+  eventStatus: {
+    status: 1,
+  },
+  cooperationClass: {
+    class: '-',
+  },
+  communicationClass: {
+    class: '-',
+  },
+  networkStatus: {
+    status: 0,
+  },
+  communicationMethod: {
+    method: '-',
+  },
+  sessionID: {
+    session: '-',
+  },
+  messageType: {
+    type: '-',
+  },
+  nodeType: {
+    type: '-',
+  },
+};
 
+const CommunicationEvent = (props: CommunicationEventProps) => {
+  const { reloadFlag } = props;
+  const { loading, setLoading } = useLoading();
+  const [metaData, setMetaData] = useState<MetaData>(initMetaData);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [nodeId, setNodeID] = useState<string>('');
@@ -81,11 +119,8 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
   const [buttonType, setButtonType] = useState<string | null>(null);
   const [modalLoad, setModalLoad] = useState<boolean>(false);
 
-  const getEventAPI = () => {
-    setLoading(true);
-    setApiLoaded(false);
-
-    const params: IEvent = {
+  const getEventData = () => {
+    const eventParams: IEvent = {
       type: 2,
       page: currentPage,
       limit: currentPageSize,
@@ -101,23 +136,63 @@ const CommunicationEvent = (props: CommunicationEventProps) => {
       order: order,
     };
 
-    getEventStatus(params).subscribe({
-      next: (response: AxiosResponse) => {
-        setEventData(response?.data?.events);
-        setTotalPages(response?.data?.meta?.totalPages);
+    setLoading(true);
+    setApiLoaded(false);
+
+    const metaDataObservable = getMetaData();
+    const commEventObservable = getEventStatus(eventParams);
+
+    forkJoin([metaDataObservable, commEventObservable]).subscribe({
+      next: ([metaDataResponse, commEventResponse]) => {
+        setMetaData(metaDataResponse.data);
+        setEventData(commEventResponse?.data?.events);
+        setTotalPages(commEventResponse?.data?.meta?.totalPages);
+        setApiLoaded(true);
+        setLoading(false); // Set loading to false after both requests complete
       },
-      error: (err) => {
-        return err;
+      error: (error) => {
+        console.error('Error fetching data:', error);
+        setApiLoaded(true);
+        setLoading(false); // Set loading to false in case of an error
       },
     });
-
-    setApiLoaded(true);
-    setLoading(false);
   };
 
+  // reload when search, change page, upload
   useEffect(() => {
-    getEventAPI();
+    reloadFlag === 2 && getEventData();
   }, [currentPage, currentPageSize, searchFlag, order, reloadFlag, modalLoad]);
+
+  // auto refresh
+  useEffect(() => {
+    if (reloadFlag === 2) {
+      const interval = setInterval(() => {
+        getAutoRefresh().subscribe({
+          next: ({ data }) => {
+            data && getEventData();
+            !data &&
+              notifications.show({
+                icon: <CircleX size="1rem" color="red" />,
+                autoClose: 3500,
+                color: 'red',
+                title: 'Maintaining',
+                message: 'Auto refresh is off',
+              });
+          },
+          error(err) {
+            console.log(err);
+          },
+        });
+      }, AUTO_REFRESH_TIME * 1000);
+
+      document.addEventListener('refreshClick', getEventData);
+
+      return () => {
+        clearInterval(interval);
+        document.removeEventListener('refreshClick', getEventData);
+      };
+    }
+  }, [reloadFlag]);
 
   const toggle = () => {
     setIsOpen(!isOpen);

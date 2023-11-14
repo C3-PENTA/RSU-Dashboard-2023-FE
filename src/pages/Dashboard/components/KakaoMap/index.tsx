@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import SummaryEventStatus from '../SummaryEventStatus';
+// import SummaryEventStatus from '../SummaryEventStatus';
 import SummarySystemStatus from '../SummarySystemStatus';
 import { IPositions, IMapProps } from '@/interfaces/interfaceDashboard';
 import { Group, createStyles } from '@mantine/core';
@@ -157,13 +157,9 @@ function Map({ data }: IMapProps) {
     loadKakaoMap();
   }, []);
   return (
-    <div className={cx(classes.mainLayout)}>
+    <div>
       <div className={cx(classes.map)} ref={mapRef}></div>
       {isDivVisible && <ProgressBar id={selected} />}
-      <Group className={cx(classes.chartLayout)}>
-        <SummarySystemStatus />
-        <SummaryEventStatus />
-      </Group>
     </div>
   );
 }

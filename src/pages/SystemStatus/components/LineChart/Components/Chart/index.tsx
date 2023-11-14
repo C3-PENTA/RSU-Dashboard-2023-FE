@@ -97,8 +97,9 @@ const LineChartSystem = (props: LineChartSystemProps) => {
 
     return labels;
   };
+
   const labels: string[] = generateLabels(data, type);
-  console.log('labels', labels);
+
   const convertToDataset = (data: LineChartData[]): Dataset[] => {
     const referenceLine: Dataset = {
       label: '정상치 기준선',

@@ -107,83 +107,55 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const initMetaData: MetaData = {
-  nodeList: {
-    nodeID: 'id',
-  },
-  eventStatus: {
-    status: 1,
-  },
-  cooperationClass: {
-    class: '-',
-  },
-  communicationClass: {
-    class: '-',
-  },
-  networkStatus: {
-    status: 0,
-  },
-  communicationMethod: {
-    method: '-',
-  },
-  sessionID: {
-    session: '-',
-  },
-  messageType: {
-    type: '-',
-  },
-  nodeType: {
-    type: '-',
-  },
-};
-
 const EventStatus = () => {
-  const [metaData, setMetaData] = useState<MetaData>(initMetaData);
   const { classes, cx } = useStyles();
-  const [availabilityReload, setAvailabilityReload] = useState<boolean>(false);
-  const [communicationReload, setCommunicationReload] = useState<boolean>(false);
-  const [type, setType] = useState<string>('Availability');
+  // const [metaData, setMetaData] = useState<MetaData>(initMetaData);
+  // const [availabilityReload, setAvailabilityReload] = useState<boolean>(false);
+  // const [communicationReload, setCommunicationReload] = useState<boolean>(false);
+  const [type, setType] = useState<number>(1);
 
-  useEffect(() => {
-    getMetaDataEvent();
-  }, [availabilityReload, communicationReload]);
+  // useEffect(() => {
+  //   getMetaDataEvent();
+  // }, []);
 
-  const eventRefresh = () => {
-    if (type === 'Availability') {
-      setAvailabilityReload(!availabilityReload);
+  // const eventRefresh = () => {
+  //   if (type === 'Availability') {
+  //     setAvailabilityReload(!availabilityReload);
+  //   } else {
+  //     setCommunicationReload(!communicationReload);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   subscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
+  //   return () => {
+  //     unsubscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
+  //   };
+  // }, [type, availabilityReload, communicationReload]);
+
+  const handleTypeChange = (value: number) => {
+    if (value === 1) {
+      // setAvailabilityReload(!availabilityReload);
+      setType(1);
     } else {
-      setCommunicationReload(!communicationReload);
+      // setCommunicationReload(!communicationReload);
+      setType(2);
     }
   };
 
-  useEffect(() => {
-    subscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
-    return () => {
-      unsubscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
-    };
-  }, [type, availabilityReload, communicationReload]);
+  // const getMetaDataEvent = () => {
+  //   getMetaData().subscribe({
+  //     next: (data: any) => {
+  //       setMetaData(data.data);
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //     },
+  //   });
+  // };
 
-  const handleTypeChange = (value: string) => {
-    if (value === 'Availability') {
-      setAvailabilityReload(!availabilityReload);
-      setType('Availability');
-    } else {
-      setCommunicationReload(!communicationReload);
-      setType('Communication');
-    }
-  };
-
-  const getMetaDataEvent = () => {
-    getMetaData().subscribe({
-      next: (data: any) => {
-        setMetaData(data.data);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  };
-
+  // console.log(availabilityReload);
+  // console.log(communicationReload);
   return (
     <Box p={'16px'} sx={{ height: 'auto', borderRadius: 8 }}>
       <Tabs defaultValue="Availability" pt={'16px'}>
@@ -191,14 +163,14 @@ const EventStatus = () => {
           <Group position="left" spacing={0}>
             <Tabs.Tab
               value="Availability"
-              onClick={() => handleTypeChange('Availability')}
+              onClick={() => handleTypeChange(1)}
               className={cx(classes.tab)}
             >
               <Text>가용성</Text>
             </Tabs.Tab>
             <Tabs.Tab
               value="Communication"
-              onClick={() => handleTypeChange('Communication')}
+              onClick={() => handleTypeChange(2)}
               className={cx(classes.tab)}
             >
               <Text>통신</Text>
@@ -206,10 +178,10 @@ const EventStatus = () => {
           </Group>
         </Tabs.List>
         <Tabs.Panel value="Availability">
-          <AvailabilityEvent metaData={metaData} reloadFlag={availabilityReload} />
+          <AvailabilityEvent reloadFlag={type} />
         </Tabs.Panel>
         <Tabs.Panel value="Communication" pt={'xs'}>
-          <CommunicationEvent metaData={metaData} reloadFlag={communicationReload} />
+          <CommunicationEvent reloadFlag={type} />
         </Tabs.Panel>
       </Tabs>
     </Box>

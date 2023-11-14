@@ -5,7 +5,6 @@ import { useLoading } from '@/LoadingContext';
 import { getAutoRefresh } from '@/services/HeaderAPI';
 import { Box, createStyles, Group, Tabs, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { getMetaData } from '@/services/ListEventAPI';
 import { DoorStatus } from './components';
 
 const useStyles = createStyles((theme) => ({
@@ -106,89 +105,21 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const initMetaData: MetaData = {
-  nodeList: {
-    nodeID: 'id',
-  },
-  eventStatus: {
-    status: 1,
-  },
-  cooperationClass: {
-    class: '-',
-  },
-  communicationClass: {
-    class: '-',
-  },
-  networkStatus: {
-    status: 0,
-  },
-  communicationMethod: {
-    method: '-',
-  },
-  sessionID: {
-    session: '-',
-  },
-  messageType: {
-    type: '-',
-  },
-  nodeType: {
-    type: '-',
-  },
-};
-
 const Sensor = () => {
   const { classes, cx } = useStyles();
-  const [doorStatusReload, setDoorStatusReload] = useState<boolean>(false);
-  // const [communicationReload, setCommunicationReload] = useState<boolean>(false);
-  const [type, setType] = useState<string>('DoorStatus');
-
-  const eventRefresh = () => {
-    if (type === 'DoorStatus') {
-      setDoorStatusReload(!doorStatusReload);
-    }
-  };
-
-  useEffect(() => {
-    subscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
-    return () => {
-      unsubscribe(EVENT_CLICK_NAME.REFRESH_BUTTON, eventRefresh);
-    };
-  }, [type, doorStatusReload]);
-
-  const handleTypeChange = (value: string) => {
-    if (value === 'DoorStatus') {
-      setDoorStatusReload(!doorStatusReload);
-      setType('DoorStatus');
-    }
-    // else {
-    //   setCommunicationReload(!communicationReload);
-    //   setType('Communication');
-    // }
-  };
 
   return (
     <Box p={'16px'} sx={{ height: 'auto', borderRadius: 8 }}>
       <Tabs defaultValue="DoorStatus" pt={'16px'}>
         <Tabs.List position="apart" sx={{ borderBottom: 'none' }}>
           <Group position="left" spacing={0}>
-            <Tabs.Tab
-              value="DoorStatus"
-              onClick={() => handleTypeChange('DoorStatus')}
-              className={cx(classes.tab)}
-            >
+            <Tabs.Tab value="DoorStatus" className={cx(classes.tab)}>
               <Text>Door Status</Text>
             </Tabs.Tab>
-            {/* <Tabs.Tab
-              value="Communication"
-              onClick={() => handleTypeChange('Communication')}
-              className={cx(classes.tab)}
-            >
-              <Text>통신</Text>
-            </Tabs.Tab> */}
           </Group>
         </Tabs.List>
         <Tabs.Panel value="DoorStatus">
-          <DoorStatus reloadFlag={doorStatusReload} />
+          <DoorStatus />
         </Tabs.Panel>
       </Tabs>
     </Box>
