@@ -8,8 +8,6 @@ import { EVENT_CLICK_NAME, EdgeSystemConnection, Role } from '@/constants';
 import { LoginContext } from '@/App';
 import { getAutoRefresh, updateAutoRefresh } from '@/services/HeaderAPI';
 
-import useGlobalStore from '@/stores';
-
 const useStyles = createStyles((theme) => ({
   titleBar: {
     backgroundColor: theme.colors.gray[7],
@@ -66,28 +64,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const edgeConnectionStatusColors = ['#ded9d9', '#51CF66', '#FF6B6B'];
-
-const getEdgeConnectionStatusColor = (value: string) => {
-  let color = edgeConnectionStatusColors[0];
-  switch (value) {
-    case EdgeSystemConnection.Connected:
-      color = edgeConnectionStatusColors[1];
-      break;
-    case EdgeSystemConnection.Disconnected:
-      color = edgeConnectionStatusColors[2];
-      break;
-    default:
-      break;
-  }
-  return color;
-};
-
 const MainTitle = () => {
-  const { isEdgeConnected } = useGlobalStore((state) => ({
-    isEdgeConnected: state.isEdgeConnected,
-  }));
-
   const { currentUser } = useContext(LoginContext);
   const { classes, cx } = useStyles();
   const [now, setNow] = useState(moment().local().format('YYYY-MM-DD HH:mm:ss'));
@@ -133,14 +110,6 @@ const MainTitle = () => {
         </Group>
         {isShowRefreshButton && (
           <Group className={cx(classes.reload)}>
-            <div
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                backgroundColor: getEdgeConnectionStatusColor(isEdgeConnected),
-              }}
-            ></div>
             <div className={cx(classes.reloadText)}>{`갱신 일시: ${now}`}</div>
             <RefreshButton onClick={handleRefresh} />
             {currentUser.role.name === Role.OPERATOR && (

@@ -1,6 +1,6 @@
 import { Box, Chip, Group, Popover, ScrollArea, Table, createStyles } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
-import { ISummaryEventStatus } from '@/interfaces/interfaceDashboard';
+import { ISummaryEventStatus, ISummarySystemStatus } from '@/interfaces/interfaceDashboard';
 import { getEventStatusSummary } from '@/services/DashboardAPI';
 import Filter from '@/assets/icons/Filter';
 
@@ -138,8 +138,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function SummaryEventStatus() {
-  const [eventStatusData, setEventStatusData] = useState<ISummaryEventStatus[]>([]);
+interface SummaryEventStatusProp {
+  data: ISummaryEventStatus[];
+}
+
+function SummaryEventStatus(props: SummaryEventStatusProp) {
+  const { data } = props;
   const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
@@ -148,6 +152,10 @@ function SummaryEventStatus() {
   const handleFilterClick = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    setSelectedNodeIds(data.map((item) => item.customId));
+  }, [data]);
 
   const handleChipClick = (nodeId: string) => {
     setSelectedNodeIds((prevSelectedNodeIds) => {
@@ -159,30 +167,28 @@ function SummaryEventStatus() {
     });
   };
 
-  const filteredData = eventStatusData.filter((item) => selectedNodeIds.includes(item.customId));
-
-  useEffect(() => {
-    getEventStatusSummary('hour_ago').subscribe({
-      next: ({ data }) => {
-        setEventStatusData(data.summary);
-        setSelectedNodeIds(data.summary.map((item) => item.customId));
-      },
-    });
-  }, []);
+  const filteredData = data.filter((item) => selectedNodeIds.includes(item.customId));
 
   const elements = filteredData.map((item) => {
     const element = {
       id: item.nodeId,
       device: item.customId,
-      normalAvailability: item.percentAvailabilityNormal,
-      errorAvailability: item.percentAvailabilityError,
-      totalAvailability: item.percentTotalAvailability,
-      normalCommunication: item.percentCommunicationNormal,
-      errorCommunication: item.percentCommunicationError,
-      totalCommunication: item.percentTotalCommunication,
+      normalAvailability:
+        item.percentAvailabilityNormal != null ? item.percentAvailabilityNormal : '-',
+      errorAvailability:
+        item.percentAvailabilityError != null ? item.percentAvailabilityError : '-',
+      totalAvailability:
+        item.percentTotalAvailability != null ? item.percentTotalAvailability : '-',
+      normalCommunication:
+        item.percentCommunicationNormal != null ? item.percentCommunicationNormal : '-',
+      errorCommunication:
+        item.percentCommunicationError != null ? item.percentCommunicationError : '-',
+      totalCommunication:
+        item.percentTotalCommunication != null ? item.percentTotalCommunication : '-',
     };
     return element;
   });
+
   const rows = elements.map((element, index) => (
     <React.Fragment key={index}>
       <tr key={element.device + '1'}>
@@ -202,9 +208,10 @@ function SummaryEventStatus() {
       </tr>
     </React.Fragment>
   ));
+
   const renderList = (
     <Popover.Dropdown className={cx(classes.dropdownMenu)}>
-      {eventStatusData.map((item) => {
+      {data.map((item) => {
         return (
           <Chip
             key={item.customId}
@@ -219,32 +226,34 @@ function SummaryEventStatus() {
       })}
     </Popover.Dropdown>
   );
-  const label = (
-    <Group className={cx(classes.legend)}>
-      <div className={cx(classes.label)}>
-        <div
-          style={{
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-            backgroundColor: '#48BB78',
-          }}
-        ></div>
-        <div>정상</div>
-      </div>
-      <div className={cx(classes.label)}>
-        <div
-          style={{
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-            backgroundColor: '#F56565',
-          }}
-        ></div>
-        <div>비정상</div>
-      </div>
-    </Group>
-  );
+
+  // const label = (
+  //   <Group className={cx(classes.legend)}>
+  //     <div className={cx(classes.label)}>
+  //       <div
+  //         style={{
+  //           width: 12,
+  //           height: 12,
+  //           borderRadius: '50%',
+  //           backgroundColor: '#48BB78',
+  //         }}
+  //       ></div>
+  //       <div>정상</div>
+  //     </div>
+  //     <div className={cx(classes.label)}>
+  //       <div
+  //         style={{
+  //           width: 12,
+  //           height: 12,
+  //           borderRadius: '50%',
+  //           backgroundColor: '#F56565',
+  //         }}
+  //       ></div>
+  //       <div>비정상</div>
+  //     </div>
+  //   </Group>
+  // );
+
   const title = (
     <Popover position="bottom" opened={isOpen} onClose={() => setIsOpen(false)}>
       <Popover.Target>
@@ -256,6 +265,7 @@ function SummaryEventStatus() {
       {renderList}
     </Popover>
   );
+
   const mainTable = (
     <ScrollArea.Autosize
       w={'100%'}
@@ -281,13 +291,14 @@ function SummaryEventStatus() {
       </Table>
     </ScrollArea.Autosize>
   );
+
   return (
     <Box className={cx(classes.eventStatus)}>
       <Group className={cx(classes.eventStatusHeader)}>
         <div className={cx(classes.textTitle)}>최근 1시간 이벤트 발생 현황</div>
         <Group className={cx(classes.textDescription)}>
           {title}
-          {label}
+          {/* {label} */}
         </Group>
       </Group>
       <Group className={cx(classes.table)}>{mainTable}</Group>

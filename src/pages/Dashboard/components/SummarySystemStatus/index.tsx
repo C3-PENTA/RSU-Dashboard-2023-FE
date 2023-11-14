@@ -4,17 +4,33 @@ import { useEffect, useState } from 'react';
 import Filter from '@/assets/icons/Filter';
 import { getSystemStatusSummary } from '@/services/DashboardAPI';
 
-const colors = ['#51CF66', '#FF6B6B'];
-const getColor = (value: number, type: string) => {
+const colors = ['#51CF66', '#FF6B6B', '#faec4d'];
+const getColor = (value: number | null, type: string): string => {
   if (value == null) {
     return '#ded9d9';
   }
-  if (type === 'cpu') {
-    return value < 70 ? colors[0] : colors[1];
-  } else if (type === 'ram' || type === 'disk') {
-    return value < 80 ? colors[0] : colors[1];
-  } else if (type === 'nic') {
-    return value === 2 ? colors[1] : colors[0];
+
+  switch (type) {
+    case 'cpu':
+      return value < 70 ? colors[0] : colors[1];
+    case 'ram':
+    case 'disk':
+      return value < 80 ? colors[0] : colors[1];
+    case 'nic':
+      return value === 2 ? colors[1] : colors[0];
+    case 'keep-alive':
+      switch (value) {
+        case 0:
+          return colors[0];
+        case 1:
+          return colors[2];
+        case 2:
+          return colors[1];
+        default:
+          return '#ded9d9';
+      }
+    default:
+      return '#ded9d9';
   }
 };
 
@@ -153,15 +169,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const SummarySystemStatus = () => {
-  const [systemStatusData, setSystemStatusData] = useState<ISummarySystemStatus[]>([]);
-  useEffect(() => {
-    getSystemStatusSummary().subscribe({
-      next: ({ data }) => {
-        setSystemStatusData(data);
-      },
-    });
-  }, []);
+interface SummarySystemStatusProp {
+  data: ISummarySystemStatus[];
+}
+
+const SummarySystemStatus = (props: SummarySystemStatusProp) => {
+  const { data } = props;
   const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
@@ -171,10 +184,10 @@ const SummarySystemStatus = () => {
     setIsOpen(!isOpen);
   };
 
-  console.log(systemStatusData);
   useEffect(() => {
-    setSelectedNodeIds(systemStatusData.map((item) => item.rsuID));
-  }, [systemStatusData]);
+    setSelectedNodeIds(data.map((item) => item.rsuID));
+  }, [data]);
+
   const handleChipClick = (nodeId: string) => {
     setSelectedNodeIds((prevSelectedNodeIds) => {
       if (prevSelectedNodeIds.includes(nodeId)) {
@@ -184,7 +197,8 @@ const SummarySystemStatus = () => {
       }
     });
   };
-  const filteredData = systemStatusData.filter((item) => selectedNodeIds.includes(item.rsuID));
+
+  const filteredData = data.filter((item) => selectedNodeIds.includes(item.rsuID));
 
   const rows = filteredData.map((element) => (
     <tr key={element.rsuID}>
@@ -196,48 +210,75 @@ const SummarySystemStatus = () => {
             height: 15,
             borderRadius: '50%',
             marginLeft: '6px',
-            backgroundColor: getColor(element.cpuUsage, 'cpu'),
+            backgroundColor: getColor(element.nodeStatus, 'keep-alive'),
           }}
         />
       </td>
       <td className={cx(classes.cells)}>
-        <div
-          style={{
-            width: 15,
-            height: 15,
-            borderRadius: '50%',
-            marginLeft: '6px',
-            backgroundColor: getColor(element.ramUsage, 'ram'),
-          }}
-        />
+        {element.cpuUsage !== null ? (
+          <div
+            style={{
+              width: 15,
+              height: 15,
+              borderRadius: '50%',
+              marginLeft: '6px',
+              backgroundColor: getColor(element.cpuUsage, 'cpu'),
+            }}
+          />
+        ) : (
+          <div>-</div>
+        )}
       </td>
       <td className={cx(classes.cells)}>
-        <div
-          style={{
-            width: 15,
-            height: 15,
-            borderRadius: '50%',
-            marginLeft: '6px',
-            backgroundColor: getColor(element.diskUsage, 'disk'),
-          }}
-        />
+        {element.ramUsage !== null ? (
+          <div
+            style={{
+              width: 15,
+              height: 15,
+              borderRadius: '50%',
+              marginLeft: '6px',
+              backgroundColor: getColor(element.ramUsage, 'ram'),
+            }}
+          />
+        ) : (
+          <div>-</div>
+        )}
       </td>
       <td className={cx(classes.cells)}>
-        <div
-          style={{
-            width: 15,
-            height: 15,
-            borderRadius: '50%',
-            marginLeft: '6px',
-            backgroundColor: getColor(element.networkStatus, 'nic'),
-          }}
-        />
+        {element.diskUsage !== null ? (
+          <div
+            style={{
+              width: 15,
+              height: 15,
+              borderRadius: '50%',
+              marginLeft: '6px',
+              backgroundColor: getColor(element.diskUsage, 'disk'),
+            }}
+          />
+        ) : (
+          <div>-</div>
+        )}
+      </td>
+      <td className={cx(classes.cells)}>
+        {element.networkStatus !== null ? (
+          <div
+            style={{
+              width: 15,
+              height: 15,
+              borderRadius: '50%',
+              marginLeft: '6px',
+              backgroundColor: getColor(element.networkStatus, 'nic'),
+            }}
+          />
+        ) : (
+          <div>-</div>
+        )}
       </td>
     </tr>
   ));
   const renderList = (
     <Popover.Dropdown className={cx(classes.dropdownMenu)}>
-      {systemStatusData.map((item) => {
+      {data.map((item) => {
         return (
           <Chip
             key={item.rsuID}
@@ -272,7 +313,7 @@ const SummarySystemStatus = () => {
             width: 12,
             height: 12,
             borderRadius: '50%',
-            backgroundColor: '#48BB78',
+            backgroundColor: colors[0],
           }}
         ></div>
         <div>정상</div>
@@ -283,10 +324,21 @@ const SummarySystemStatus = () => {
             width: 12,
             height: 12,
             borderRadius: '50%',
-            backgroundColor: '#F56565',
+            backgroundColor: colors[1],
           }}
         ></div>
         <div>비정상</div>
+      </div>
+      <div className={cx(classes.label)}>
+        <div
+          style={{
+            width: 12,
+            height: 12,
+            borderRadius: '50%',
+            backgroundColor: colors[2],
+          }}
+        ></div>
+        <div>Unknown</div>
       </div>
     </Group>
   );
@@ -305,6 +357,7 @@ const SummarySystemStatus = () => {
         >
           <tr>
             <th className={cx(classes.theadCells)}>장비 정보</th>
+            <th className={cx(classes.theadCells)}>ALIVE</th>
             <th className={cx(classes.theadCells)}>CPU</th>
             <th className={cx(classes.theadCells)}>RAM</th>
             <th className={cx(classes.theadCells)}>DISK</th>

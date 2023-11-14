@@ -22,6 +22,7 @@ export interface ISummarySystemStatus {
   nodeID: string;
   rsuID: string;
   rsuName: string;
+  nodeStatus: number;
   cpuUsage: number;
   cpuTemp: number;
   ramUsage: number;

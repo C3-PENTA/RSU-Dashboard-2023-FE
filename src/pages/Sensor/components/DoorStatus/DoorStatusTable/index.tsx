@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Table, Checkbox, createStyles, rem, ScrollArea, Text } from '@mantine/core';
+import { Table, createStyles, rem, ScrollArea, Text } from '@mantine/core';
 import { BiUpArrow, BiDownArrow } from 'react-icons/bi';
 import moment from 'moment';
 import { IDoorStatusData } from '..';
 
-interface AvailabilityProps {
+interface DoorStatusProps {
   currentPage: number;
   setListEvent: Dispatch<SetStateAction<string[]>>;
   setOrder: Dispatch<SetStateAction<string>>;
@@ -52,7 +52,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const DoorStatusTable = (props: AvailabilityProps) => {
+const DoorStatusTable = (props: DoorStatusProps) => {
   const { currentPage, setOrder, eventData, setListEvent } = props;
   const data = eventData;
   const [tickAll, setTickAll] = useState(false);
@@ -68,35 +68,6 @@ const DoorStatusTable = (props: AvailabilityProps) => {
     } else {
       setOrder('desc');
     }
-  };
-
-  const handleTickAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked;
-    setTickAll(isChecked);
-    setSubCheckBoxes(Array(data.length).fill(isChecked));
-    if (isChecked) {
-      const allIds = data.map((items) => items.id);
-      setListEvent(allIds);
-    } else {
-      setListEvent(['']);
-    }
-  };
-
-  const handleSubCheckBox = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked;
-    setSubCheckBoxes((prevState) => {
-      const newCheckBoxes = [...prevState];
-      newCheckBoxes[index] = isChecked;
-      return newCheckBoxes;
-    });
-    setListEvent((prevListEvent) => {
-      const updatedList = prevListEvent.filter(Boolean);
-      if (isChecked) {
-        return [...updatedList, data[index].id];
-      } else {
-        return updatedList.filter((id) => id !== data[index].id);
-      }
-    });
   };
 
   useEffect(() => {
@@ -122,11 +93,6 @@ const DoorStatusTable = (props: AvailabilityProps) => {
           <tr>
             <th className={cx(classes.headerCell)}>
               <div style={{ display: 'flex' }}>
-                <Checkbox
-                  checked={tickAll}
-                  onChange={handleTickAll}
-                  style={{ marginRight: '5%' }}
-                />
                 발생 시간 &nbsp;
                 <span>
                   {isToggled ? (
@@ -144,15 +110,9 @@ const DoorStatusTable = (props: AvailabilityProps) => {
           {data.map((items, index) => (
             <tr key={index} className={cx(classes.row)}>
               <td className={cx(classes.cell)}>
-                <Checkbox
-                  checked={subCheckBoxes[index]}
-                  onChange={handleSubCheckBox(index)}
-                  label={
-                    <Text color="white">
-                      {moment(items.timestamp).local().format('YYYY-MM-DD HH:mm:ss')}
-                    </Text>
-                  }
-                />
+                <Text color="white">
+                  {moment(items.timestamp).local().format('YYYY-MM-DD HH:mm:ss')}
+                </Text>
               </td>
               <td className={cx(classes.cell)}>{items.status}</td>
             </tr>

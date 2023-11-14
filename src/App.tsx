@@ -6,7 +6,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import PageLayout from './components/PageLayout';
 import { SocketEvents } from './config/httpConfig/socket';
 import routesConfig from './config/routesConfig';
-import { IEdgeConnectionStatus, INotificationEventSocket } from './interfaces/interfaceListEvent';
+import { INotificationEventSocket } from './interfaces/interfaceListEvent';
 import useGlobalStore from './stores';
 import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
@@ -42,11 +42,10 @@ export const LoginContext = createContext({
 });
 
 function App() {
-  const { socket, setEdgeConnectionStatus, isEdgeConnected } = useGlobalStore((state) => ({
+  const { socket } = useGlobalStore((state) => ({
     socket: state.socket,
-    isEdgeConnected: state.isEdgeConnected,
-    setEdgeConnectionStatus: state.setEdgeConnectionStatus,
   }));
+
   const uID = useId();
   let currentUser: userInfo = initUser;
   const accessToken = Cookies.get('accessToken');
@@ -65,44 +64,44 @@ function App() {
     if (loginState && isFirstAccess) {
       navigate('/');
       setIsFirstAccess(false);
-      getAutoRefresh().subscribe({
-        next: ({ data }) => {
-          !data &&
-            notifications.show({
-              icon: <CircleX size="1rem" color="red" />,
-              autoClose: 3500,
-              color: 'red',
-              title: 'Maintaining',
-              message: 'Auto refresh is off',
-            });
-        },
-        error(err) {
-          console.log(err);
-        },
-      });
+      // getAutoRefresh().subscribe({
+      //   next: ({ data }) => {
+      //     !data &&
+      //       notifications.show({
+      //         icon: <CircleX size="1rem" color="red" />,
+      //         autoClose: 3500,
+      //         color: 'red',
+      //         title: 'Maintaining',
+      //         message: 'Auto refresh is off',
+      //       });
+      //   },
+      //   error(err) {
+      //     console.log(err);
+      //   },
+      // });
     }
     if (!loginState) {
       navigate('/login');
     } else {
-      const interval = setInterval(() => {
-        getAutoRefresh().subscribe({
-          next: ({ data }) => {
-            if (window.location.href.includes('event-status')) return;
-            !data &&
-              notifications.show({
-                icon: <CircleX size="1rem" color="red" />,
-                autoClose: 3500,
-                color: 'red',
-                title: 'Maintaining',
-                message: 'Auto refresh is off',
-              });
-          },
-          error(err) {
-            console.log(err);
-          },
-        });
-      }, AUTO_REFRESH_TIME * 1000);
-      return () => clearInterval(interval);
+      // const interval = setInterval(() => {
+      //   getAutoRefresh().subscribe({
+      //     next: ({ data }) => {
+      //       if (window.location.href.includes('event-status')) return;
+      //       !data &&
+      //         notifications.show({
+      //           icon: <CircleX size="1rem" color="red" />,
+      //           autoClose: 3500,
+      //           color: 'red',
+      //           title: 'Maintaining',
+      //           message: 'Auto refresh is off',
+      //         });
+      //     },
+      //     error(err) {
+      //       console.log(err);
+      //     },
+      //   });
+      // }, AUTO_REFRESH_TIME * 1000);
+      // return () => clearInterval(interval);
     }
   }, [loginState, isFirstAccess]);
 
@@ -130,18 +129,8 @@ function App() {
         }, 200);
       });
 
-    loginState &&
-      socket.on(SocketEvents.KEEP_ALIVE, (event: IEdgeConnectionStatus) => {
-        if (isEdgeConnected != event.status) {
-          console.log('Is Edge COnnected', isEdgeConnected);
-          console.log('Status', event.status);
-          setEdgeConnectionStatus(event.status);
-        }
-      });
-
     return () => {
       loginState && socket.off(SocketEvents.NEW_NOTIFICATION);
-      loginState && socket.off(SocketEvents.KEEP_ALIVE);
     };
   }, [loginState]);
 

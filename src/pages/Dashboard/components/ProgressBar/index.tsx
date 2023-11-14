@@ -4,7 +4,7 @@ import { getEventStatusSummary } from '@/services/DashboardAPI';
 import { Group, RingProgress, createStyles } from '@mantine/core';
 import CloseButton from '@/assets/icons/CloseButton';
 
-const color = ['#48BB78', '#F56565'];
+const colors = ['#51CF66', '#FF6B6B', '#faec4d'];
 
 const useStyles = createStyles((theme) => ({
   layout: {
@@ -111,50 +111,65 @@ const ProgressBar = (props: { id: string }) => {
     };
     return element;
   });
+
   const filterData = elements.filter((item) => item.id == props.id);
   let percentTotalEvent: { value: number; color: string; tooltip: string }[] = [];
   let percentAvailabilityEvents: { value: number; color: string; tooltip: string }[] = [];
   let percentCommunicationEvents: { value: number; color: string; tooltip: string }[] = [];
   let titleDevice = '';
+
   if (filterData.length > 0) {
+    const normalAvailability = filterData[0].normalAvailability;
+    const normalCommunication = filterData[0].normalCommunication;
+    const errorCommunication = filterData[0].errorCommunication;
+    const errorAvailability = filterData[0].errorAvailability;
+    const total = normalAvailability + errorAvailability + normalCommunication + errorCommunication;
+    const totalError = total != 0 ? ((errorCommunication + errorAvailability) * 100) / total : null;
+    const totalNormal =
+      total != 0 ? ((normalAvailability + normalCommunication) * 100) / total : null;
+
     percentTotalEvent = [
       {
-        value: (filterData[0].normalAvailability + filterData[0].normalCommunication) / 2,
-        color: color[0],
-        tooltip: `${(filterData[0].normalAvailability + filterData[0].normalCommunication) / 2}`,
+        value: totalNormal != null ? totalNormal : 100,
+        color: totalNormal != null ? colors[0] : colors[2],
+        tooltip: totalNormal != null ? `${totalNormal}` : '-',
       },
       {
-        value: (filterData[0].errorAvailability + filterData[0].errorCommunication) / 2,
-        color: color[1],
-        tooltip: `${(filterData[0].errorAvailability + filterData[0].errorCommunication) / 2}`,
+        value: totalError != null ? totalError : 100,
+        color: totalError != null ? colors[1] : colors[2],
+        tooltip: totalError != null ? `${totalError}` : '-',
       },
     ];
+
     percentAvailabilityEvents = [
       {
-        value: filterData[0].normalAvailability,
-        color: color[0],
-        tooltip: `${filterData[0].normalAvailability}`,
+        value: normalAvailability != null ? normalAvailability : 100,
+        color: normalAvailability != null ? colors[0] : colors[2],
+        tooltip: normalAvailability != null ? `${normalAvailability}` : '-',
       },
       {
-        value: filterData[0].errorAvailability,
-        color: color[1],
-        tooltip: `${filterData[0].errorAvailability}`,
+        value: errorAvailability != null ? errorAvailability : 100,
+        color: errorAvailability != null ? colors[1] : colors[2],
+        tooltip: errorAvailability != null ? `${errorAvailability}` : '-',
       },
     ];
+
     percentCommunicationEvents = [
       {
-        value: filterData[0].normalCommunication,
-        color: color[0],
-        tooltip: `${filterData[0].normalCommunication}`,
+        value: normalCommunication != null ? normalCommunication : 100,
+        color: normalCommunication != null ? colors[0] : colors[2],
+        tooltip: normalCommunication != null ? `${normalCommunication}` : '-',
       },
       {
-        value: filterData[0].errorCommunication,
-        color: color[1],
-        tooltip: `${filterData[0].errorCommunication}`,
+        value: errorCommunication != null ? errorCommunication : 100,
+        color: errorCommunication != null ? colors[1] : colors[2],
+        tooltip: errorCommunication != null ? `${errorCommunication}` : '-',
       },
     ];
+
     titleDevice = filterData[0].device;
   }
+
   const processBarTitle = (
     <Group className={cx(classes.header)}>
       <Group className={cx(classes.title)}>
@@ -167,7 +182,7 @@ const ProgressBar = (props: { id: string }) => {
               width: 12,
               height: 12,
               borderRadius: '50%',
-              backgroundColor: '#48BB78',
+              backgroundColor: colors[0],
             }}
           ></div>
           <div>정상</div>
@@ -178,14 +193,26 @@ const ProgressBar = (props: { id: string }) => {
               width: 12,
               height: 12,
               borderRadius: '50%',
-              backgroundColor: '#F56565',
+              backgroundColor: colors[1],
             }}
           ></div>
           <div>비정상</div>
         </div>
+        <div className={cx(classes.label)}>
+          <div
+            style={{
+              width: 12,
+              height: 12,
+              borderRadius: '50%',
+              backgroundColor: colors[2],
+            }}
+          ></div>
+          <div>Unknown</div>
+        </div>
       </Group>
     </Group>
   );
+
   const mainProcessBar = (
     <Group>
       <div className={cx(classes.progressBar)}>
@@ -202,12 +229,14 @@ const ProgressBar = (props: { id: string }) => {
       </div>
     </Group>
   );
+
   const processBar = (
     <div className={cx(classes.layout)}>
       {processBarTitle}
       {mainProcessBar}
     </div>
   );
+
   return processBar;
 };
 
